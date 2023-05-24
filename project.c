@@ -198,7 +198,6 @@ void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int
         novo_no->reserva.hora.minutos = minuto;
         // TODO create lista pre reservas
 
-
         NoListaReservas *previous, *current;
         previous = NULL;
         current = lista->start;
