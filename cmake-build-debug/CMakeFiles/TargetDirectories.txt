@@ -1,0 +1,3 @@
+C:/Users/jonib/OneDrive/Ambiente de Trabalho/2o ano/2o Semestre/PPP/Projeto/cmake-build-debug/CMakeFiles/Projeto.dir
+C:/Users/jonib/OneDrive/Ambiente de Trabalho/2o ano/2o Semestre/PPP/Projeto/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/jonib/OneDrive/Ambiente de Trabalho/2o ano/2o Semestre/PPP/Projeto/cmake-build-debug/CMakeFiles/rebuild_cache.dir
