@@ -1,9 +1,11 @@
 #include "project.h"
 
+void insert_reserva(ListaReservas *pReservas, int id, tipoReserva reserva, int dia, int hora, int minuto);
+
 int main() {
 
     int option = 1;
-    int clientID, dia, hora, minuto, sucesso = 0;
+    int clientID, dia, hora, minuto, sucesso = 0, reservationID;
     char tipoR;
     tipoReserva tipoRes;
 
@@ -38,35 +40,55 @@ int main() {
             while(sucesso == 0 || sucesso == 2) {
                 printf("\nEscolha a hora desejada (hora:minutos)\n");
                 scanf("%d:%d", &hora, &minuto);
-                sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes.duracao);
+                sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes.duracao, tipoRes, clientID);
+            }
+            if(sucesso == 1) {
+                // TODO terminar insert
+                insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
+
+                ++reserva_autoID;
             }
         }
 
         // ------------------------CANCELAR-RESERVA------------------------
         else if (option == 2) {
+            //PRINT FULL LIST
+            print_reservas(listaReservas);
+            printf("Que reserva pretende cancelar?\n");
+            scanf("%d", &reservationID);
+            cancela_reserva(listaReservas, reservationID);
+        }
+
+            // ------------------------CANCELAR-RESERVA------------------------
+        else if (option == 3) {
+            // PRINT FULL LIST
+            // ESCOLHER A RESERVA
+            // PRINT PRÉ-RESERVAS DESSA HORA
 
         }
 
         // --------------------------LIST-ALL--------------------------
-        else if (option == 3) {
-
-        }
-
-        // --------------------------LIST-CLIENT--------------------------
         else if (option == 4) {
 
         }
 
-        // --------------------------SAVE--------------------------
+        // --------------------------LIST-CLIENT--------------------------
         else if (option == 5) {
 
         }
 
-        // --------------------------LOAD--------------------------
+        // --------------------------SAVE--------------------------
         else if (option == 6) {
+
+        }
+
+        // --------------------------LOAD--------------------------
+        else if (option == 7) {
 
         }
     }
     return 0;
 }
+
+
 
