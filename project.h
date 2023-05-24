@@ -18,18 +18,19 @@ typedef struct tipoReserva {
 } tipoReserva;
 
 typedef struct horarioReserva {
-    int dia, mes, ano, hora, minutos;
+    int dia, hora, minutos;
 } horarioReserva;
 
-typedef struct Reservas {
-    char cliente[50];
+
+typedef struct Reserva {
+    int clientID;
     tipoReserva tipo;
     horarioReserva hora;
     //Lista Ligada do tipo Pre_Reservas
-} Reservas;
+} Reserva;
 
 typedef struct NoListaPre_Reservas {
-    Reservas reserva;
+    Reserva reserva;
     struct NoListaPre_Reservas *next;
 } NoListaPre_Reservas;
 
@@ -39,7 +40,7 @@ typedef struct ListaPre_Reservas {
 } ListaPre_Reservas;
 
 typedef struct NoListaReservas {
-    Reservas reserva;
+    Reserva reserva;
     ListaPre_Reservas listaPreReservas;
     struct NoListaReservas *next;
 } NoListaReservas;
@@ -52,9 +53,14 @@ typedef struct ListaReservas {
 //funcoes
 ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
+Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
 
 void print_sorted(ListaReservas *lptr);
 void menu_inicial();
+void print_reservas_dia(ListaReservas *lista, int dia);
+
 int func_comp(const void *a, const void *b);
+int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, int duracao);
+
 
 #endif //PROJETO_PROJECT_H
