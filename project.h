@@ -54,7 +54,7 @@ ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
 
 void print_sorted(ListaReservas *lptr);
-
+void menu_inicial();
 int func_comp(const void *a, const void *b);
 
 #endif //PROJETO_PROJECT_H

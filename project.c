@@ -51,3 +51,13 @@ void print_sorted(ListaReservas *lista) {
         free(ptr);
     }
 }
+    void menu_inicial(){
+        printf("------------------------------------");
+        printf("Escolha uma das seguintes opções");
+        printf("1-:- Efetuar reserva");
+        printf("2-:- Cancelar reserva");
+        printf("3-:- Listar todas reservas");
+        printf("4-:- Listar reservas de cliente");
+        printf("5-:- Carregar reservas");
+        printf("------------------------------------");
+}
