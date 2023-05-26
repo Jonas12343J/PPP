@@ -60,6 +60,7 @@ ListaPre_Reservas *create_lista_pre_reservas();
 Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next);
 
+
 void print_sorted(ListaReservas *lptr);
 void menu_inicial();
 void print_reservas_dia(ListaReservas *lista, int dia);

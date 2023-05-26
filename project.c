@@ -355,11 +355,11 @@ void menu_inicial() {
     printf("-------------------------MENU-------------------------\n");
     printf("\t1 - Efetuar reserva\n");
     printf("\t2 - Cancelar reserva\n");
-    printf("\t2 - Cancelar pre-reserva\n");
-    printf("\t3 - Listar todas reservas\n");
-    printf("\t4 - Listar reservas de cliente\n");
-    printf("\t5 - Salvar reservas\n");
-    printf("\t6 - Carregar reservas\n");
+    printf("\t3 - Cancelar pre-reserva\n");
+    printf("\t4 - Listar todas reservas\n");
+    printf("\t5 - Listar reservas de cliente\n");
+    printf("\t6 - Salvar reservas\n");
+    printf("\t7 - Carregar reservas\n");
     printf("\t0 - QUIT\n");
     printf("------------------------------------------------------\n\n  -> ");
 }

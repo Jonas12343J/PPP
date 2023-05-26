@@ -5,7 +5,6 @@ int main() {
 
     int option = 1;
     int clientID, dia, hora, minuto, sucesso = 0, reservationID;
-
     tipoReserva tipoRes;
 
     ListaReservas *listaReservas = create_lista_reservas();
