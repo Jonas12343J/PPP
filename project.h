@@ -45,7 +45,7 @@ typedef struct ListaPre_Reservas {
 
 typedef struct NoListaReservas {
     Reserva reserva;
-    ListaPre_Reservas listaPreReservas;
+    ListaPre_Reservas *listaPreReservas;
     struct NoListaReservas *next;
 } NoListaReservas;
 
@@ -58,6 +58,7 @@ typedef struct ListaReservas {
 ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
 Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
+NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next);
 
 void print_sorted(ListaReservas *lptr);
 void menu_inicial();
@@ -65,6 +66,7 @@ void print_reservas_dia(ListaReservas *lista, int dia);
 void print_reservas(ListaReservas *lista);
 void cancela_reserva(ListaReservas *lista, int reservationID);
 void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
+void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID);
 
 int func_comp(const void *a, const void *b);
 int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, int duracao, tipoReserva tipoRes, int clientID);
