@@ -8,8 +8,8 @@
 #ifndef PROJETO_PROJECT_H
 #define PROJETO_PROJECT_H
 
-int reserva_autoID = 0;
-int pre_reserva_autoID = 0;
+extern int reserva_autoID;
+extern int pre_reserva_autoID;
 
 enum tipo {
     Manutencao, Lavagem
@@ -39,7 +39,7 @@ typedef struct NoListaPre_Reservas {
 } NoListaPre_Reservas;
 
 typedef struct ListaPre_Reservas {
-    NoListaPre_Reservas *start, *end;
+    NoListaPre_Reservas *start;
     int size;
 } ListaPre_Reservas;
 
@@ -66,10 +66,12 @@ void print_reservas_dia(ListaReservas *lista, int dia);
 void print_reservas(ListaReservas *lista);
 void cancela_reserva(ListaReservas *lista, int reservationID);
 void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
+void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID);
 
 int func_comp(const void *a, const void *b);
 int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, int duracao, tipoReserva tipoRes, int clientID);
+int compare_reservas_time(Reserva res1, Reserva res2);
 
 
 #endif //PROJETO_PROJECT_H

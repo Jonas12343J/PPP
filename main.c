@@ -1,12 +1,11 @@
 #include "project.h"
 
-void insert_reserva(ListaReservas *pReservas, int id, tipoReserva reserva, int dia, int hora, int minuto);
 
 int main() {
 
     int option = 1;
     int clientID, dia, hora, minuto, sucesso = 0, reservationID;
-    char tipoR;
+
     tipoReserva tipoRes;
 
     ListaReservas *listaReservas = create_lista_reservas();
@@ -18,20 +17,21 @@ int main() {
         if (option == 1) {
             printf("Insira o ID do cliente\n");
             scanf("%d", &clientID);
+            getchar();
             printf("Escolha o tipo de operacao (M/L)\n");
 
-            // Só para o while
-            tipoR = 'O';
+            char tipoR;
+            scanf("%c", &tipoR);
             while(tipoR != 'M' && tipoR != 'L') {
-                scanf("%c", &tipoR);
-                if (tipoR == 'M') {
-                    tipoRes.tipoR = Manutencao;
-                    tipoRes.duracao = 60;
-                } else if (tipoR == 'L') {
-                    tipoRes.tipoR = Lavagem;
-                    tipoRes.duracao = 30;
-                }
                 printf("Tipo invalido!\nEscolha o tipo de operacao (M/L)\n");
+                scanf("%c", &tipoR);
+            }
+            if (tipoR == 'M') {
+                tipoRes.tipoR = Manutencao;
+                tipoRes.duracao = 60;
+            } else if (tipoR == 'L') {
+                tipoRes.tipoR = Lavagem;
+                tipoRes.duracao = 30;
             }
 
             printf("Qual o dia pretendido?\n");
@@ -40,14 +40,16 @@ int main() {
             while(sucesso == 0 || sucesso == 2) {
                 printf("\nEscolha a hora desejada (hora:minutos)\n");
                 scanf("%d:%d", &hora, &minuto);
+                // Fix temporario
+                if(minuto > 59)
+                    minuto = 0;
                 sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes.duracao, tipoRes, clientID);
             }
             if(sucesso == 1) {
-                // TODO terminar insert
                 insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
-
                 ++reserva_autoID;
             }
+            sucesso = 0;
         }
 
         // ------------------------CANCELAR-RESERVA------------------------
