@@ -47,12 +47,10 @@ int func_comp(const void *a, const void *b) {
 // Verifica se tem slot disponivel na hora pretendida
 // Se sim, marca, se não pergunta se quer pré-reserva ou novo horário
 // 0 -> invalid // 1 -> vaga // 2 -> ocupado // 3 -> ficou em pré reserva
-int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, int duracao, tipoReserva tipoRes,
-                          int clientID) {
-
+int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, tipoReserva tipoRes, int clientID) {
 
     // Check input válido
-    if (hora < 8 || ((hora * 60 + minuto) + duracao) > 18 * 60 + 1) {
+    if (hora < 8 || ((hora * 60 + minuto) + tipoRes.duracao) > 18 * 60 || minuto < 0 || minuto > 59) {
         printf("Fora do horario de funcionamento!\n");
         return 0;
     }
@@ -62,20 +60,20 @@ int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, i
 
         for (int i = 0; i < lista->size; ++i) {
             if (current->reserva.hora.dia == dia) {
-                // Se hora que quero a reserva < (antes) do fim da atual (hora da atual + duracao dela)
-                // -------------------------------------OR----------------------------------------
-                // Se hora que quero a reserva terminar > (depois) do início proximo ja reservado
-                if ((hora * 60 + minuto) <
-                    (current->reserva.hora.hora * 60 + current->reserva.hora.minutos + current->reserva.tipo.duracao)
-                    || (hora * 60 + minuto + duracao) >
-                       (current->next->reserva.hora.hora * 60 + current->next->reserva.hora.minutos)) {
 
-                    printf("%d:%d\n", hora, minuto);
-                    printf("Horario ja ocupado! Deseja ficar em lista de pre-reserva? (y/n)");
+                //if ((hora * 60 + minuto) < (current->reserva.hora.hora * 60 + current->reserva.hora.minutos + current->reserva.tipo.duracao)
+                //                    || (hora * 60 + minuto + tipoRes.duracao) > (current->next->reserva.hora.hora * 60 + current->next->reserva.hora.minutos))
+
+                // Se a hora que quero a reserva < (antes) do fim da atual (hora da atual + duracao dela) EEEEE se começar depois da atual
+                // -------------------------------------OR----------------------------------------
+                // Se hora que quero a reserva terminar > (depois) do início proximo ja reservado (com next != NULL!!!!!)
+                if (((hora * 60 + minuto) < (current->reserva.hora.hora * 60 + current->reserva.hora.minutos + current->reserva.tipo.duracao) && (hora * 60 + minuto) > (current->reserva.hora.hora * 60 + current->reserva.hora.minutos))
+                || (current->next != NULL && (hora * 60 + minuto + tipoRes.duracao) > (current->next->reserva.hora.hora * 60 + current->next->reserva.hora.minutos))) {
+                    printf("Horario ja ocupado! Deseja ficar em lista de pre-reserva? (y/n) ");
                     getchar();
-                    char decisao;
-                    scanf("%c", &decisao);
-                    if (decisao == 'y') {
+                    char decisao[2];
+                    scanf("%s", decisao);
+                    if (strcmp(decisao, "y") == 0) {
                         // TODO function bellow
                         insert_pre_reserva(current->listaPreReservas, current, clientID, tipoRes, dia, hora, minuto);
                         return 3;
@@ -85,8 +83,9 @@ int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, i
                         return 2;
                     }
                 }
-                current = current->next;
+
             }
+            current = current->next;
         }
     }
     return 1;
@@ -120,14 +119,18 @@ void print_reservas_dia(ListaReservas *lista, int dia) {
         NoListaReservas *current = lista->start;
 
         for (int i = 0; i < lista->size; ++i) {
+            char tipoRstr[10];
+            strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+
             if (current->reserva.hora.dia == dia && flag == 0) {
+
                 flag = 1;
                 printf("Existem as seguintes reservas para o dia %d:\n", dia);
-                printf("\n%d:%d -> %u (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
-                       current->reserva.tipo.tipoR, current->reserva.tipo.duracao);
+                printf("\n%d:%d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
+                       tipoRstr, current->reserva.tipo.duracao);
             } else if (current->reserva.hora.dia == dia && flag != 0) {
-                printf("\n%d:%d -> %u (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
-                       current->reserva.tipo.tipoR, current->reserva.tipo.duracao);
+                printf("\n%d:%d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
+                       tipoRstr, current->reserva.tipo.duracao);
             }
             current = current->next;
         }
@@ -277,7 +280,7 @@ void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int
         novo_no->reserva.hora.hora = hora;
         novo_no->reserva.hora.minutos = minuto;
         novo_no->listaPreReservas = create_lista_pre_reservas();
-
+        novo_no->next = NULL;
 
         // Caso a lista esteja vazia ou a nova reserva seja anterior à primeira reserva
         if (lista->start == NULL || !compare_reservas_time(novo_no->reserva, lista->start->reserva)) {
