@@ -20,7 +20,7 @@ int main() {
             printf("Escolha o tipo de operacao (M/L)\n");
             char tipoR[2];
             scanf("%s", tipoR);
-            while(strcmp(tipoR, "M") != 0 && strcmp(tipoR, "L") != 0) {
+            while (strcmp(tipoR, "M") != 0 && strcmp(tipoR, "L") != 0) {
                 printf("Tipo invalido!\nEscolha o tipo de operacao (M/L)\n");
                 scanf("%s", tipoR);
             }
@@ -35,26 +35,26 @@ int main() {
             printf("Qual o dia pretendido?\n");
             scanf("%d", &dia);
             // Proteção básica, nao há necessidade de fazer algo mais elaborado para o conceito do exercício
-            while(dia < 1 || dia > 31){
+            while (dia < 1 || dia > 31) {
                 printf("Dia invalido!\nQual o dia pretendido?\n");
                 scanf("%d", &dia);
             }
             print_reservas_dia(listaReservas, dia);
-            //while(sucesso == 0 || sucesso == 2) {
-            printf("\nEscolha a hora desejada (hora:minutos)\n");
-            minuto = 0;
-            scanf("%d:%d", &hora, &minuto);
+            while (sucesso == 0 || sucesso == 2) {
+                printf("\nEscolha a hora desejada (hora:minutos)\n");
+                minuto = 0;
+                scanf("%d:%d", &hora, &minuto);
 
 
-            // TODO refazer esta funcao
-            // Procurar o spor certo primeiro maybe
-            //sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes, clientID);
-            //}
-            //if(sucesso == 1) {
-            insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
-            ++reserva_autoID;
-            //}
-            //sucesso = 0;
+                // TODO refazer esta funcao
+                // Procurar o spor certo primeiro maybe
+                sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes, clientID);
+            }
+            if (sucesso == 1) {
+                insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
+                ++reserva_autoID;
+            }
+            sucesso = 0;
         }
 
             // ------------------------CANCELAR-RESERVA------------------------

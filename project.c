@@ -36,6 +36,7 @@ NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int 
     return current;
 }
 
+
 int func_comp(const void *a, const void *b) {
     NoListaReservas *v1 = *((NoListaReservas **) a);
     NoListaReservas *v2 = *((NoListaReservas **) b);
@@ -43,6 +44,7 @@ int func_comp(const void *a, const void *b) {
     //TODO nao é por clientes
     //return strcmp(v1->reserva.client.name, v2->reserva.client.name);
 }
+
 
 // Verifica se tem slot disponivel na hora pretendida
 // Se sim, marca, se não pergunta se quer pré-reserva ou novo horário
@@ -55,46 +57,47 @@ int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, t
         return 0;
     }
 
-    if (lista->size > 0) {
         NoListaReservas *current = lista->start;
         NoListaReservas *previous = NULL;
 
-        for (int i = 0; i < lista->size; ++i) {
-            if (current->reserva.hora.dia == dia) {
-                // Se a hora que quero a reserva < (antes) do fim da atual (hora da atual + duracao dela) EEEEE se começar depois da atual
-                // -------------------------------------OR----------------------------------------
-                // Se hora que quero a reserva terminar > (depois) do início proximo ja reservado (com next != NULL!!!!!)
+        int new_start = (hora * 60 + minuto);
+        int new_end = (hora * 60 + minuto + tipoRes.duracao);
 
-                //printf("%d < %d\n%d > %d\n", (hora * 60 + minuto), (current->reserva.hora.hora * 60 + current->reserva.hora.minutos + current->reserva.tipo.duracao),(hora * 60 + minuto), (current->reserva.hora.hora * 60 + current->reserva.hora.minutos));
-                //printf("%d > %d\n", (hora * 60 + minuto + tipoRes.duracao), (current->next->reserva.hora.hora * 60 + current->next->reserva.hora.minutos));
-
-                if ((previous != NULL && ((hora * 60 + minuto) <
-                                          (previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
-                                           previous->reserva.tipo.duracao) && (hora * 60 + minuto) >
-                                                                              (previous->reserva.hora.hora * 60 +
-                                                                               previous->reserva.hora.minutos)))
-                    || ((current != NULL) && (hora * 60 + minuto + tipoRes.duracao) >
-                                             (current->reserva.hora.hora * 60 + current->reserva.hora.minutos))) {
-                    printf("Horario ja ocupado! Deseja ficar em lista de pre-reserva? (y/n) ");
-                    getchar();
-                    char decisao[2];
-                    scanf("%s", decisao);
-                    if (strcmp(decisao, "y") == 0) {
-                        // TODO function bellow
-                        insert_pre_reserva(current->listaPreReservas, current, clientID, tipoRes, dia, hora, minuto);
-                        return 3;
-
-                    } else {
-                        printf("Introduza uma nova hora\n");
-                        return 2;
-                    }
-                }
-
-            }
+        // Se a nova reserva acabar depois da atual começar, vai ao next
+        // Avança até encontrar um que comece depois da nova acabar OU NO FIM DA LISTA
+        while (current && (new_end > (current->reserva.hora.hora * 60 + current->reserva.hora.minutos))) {
             previous = current;
             current = current->next;
         }
-    }
+
+        if (!previous) {
+            // Vaga no inicio -> lista tava vazia
+            return 1;
+        } else if (current) {
+            int previous_end = (previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos + previous->reserva.tipo.duracao);
+            int current_start = (current->reserva.hora.hora * 60 + current->reserva.hora.minutos);
+
+            // Se a reserva anterior terminar antes da nova começar AND e a nova acabar antes da atual começar -> SUCESSO
+            if ((previous_end < new_start) && (new_end < current_start)) {
+                return 1;
+            }
+            // Se a reserva anterior acabar depois da nova começar OR a nova acabar depois da atual começar
+            else if ((previous_end > new_start) || (new_end > current_start)) {
+                printf("Horario ja ocupado! Deseja ficar em lista de pre-reserva? (y/n) ");
+                char decisao[2];
+                scanf("%s", decisao);
+                if (strcmp(decisao, "y") == 0) {
+                    // TODO function bellow
+                    insert_pre_reserva(current->listaPreReservas, current, clientID, tipoRes, dia, hora, minuto);
+                    return 3;
+
+                } else {
+                    printf("Introduza uma nova hora\n");
+                    return 2;
+                }
+            }
+        }
+
     return 1;
 }
 
@@ -187,7 +190,7 @@ void print_pre_reservas(ListaReservas *lista, int reservationID) {
     }
 
     if (found) {
-        if(current->listaPreReservas->size > 0) {
+        if (current->listaPreReservas->size > 0) {
             NoListaPre_Reservas *curr_pre = current->listaPreReservas->start;
             printf("-------------------------PRE_RESERVAS-------------------------\n");
             for (int i = 0; i < lista->size; ++i) {
@@ -204,13 +207,11 @@ void print_pre_reservas(ListaReservas *lista, int reservationID) {
             scanf("%d", &pre_reservationID);
             cancela_pre_reserva(current->listaPreReservas, pre_reservationID);
             return;
-        }
-        else {
+        } else {
             printf("Sem pre-reservas para este bloco!\n\n");
             usleep(500000);
         }
-    }
-    else {
+    } else {
         printf("ID de reserva nao encontrado!\n\n");
     }
 }
@@ -308,7 +309,7 @@ void cancela_pre_reserva2(ListaReservas *lista, int pre_reservationID) {
 }
 
 // Funcão que vai verificar se uma reserva é antes ou depois (temporalmente) em relação a outra
-// Returns: 0 para anterior // 1 para posterior
+// Returns: 0 para anterior // 1 para posterior // 2 para igual
 int compare_reservas_time(Reserva res1, Reserva res2) {
     if (res1.hora.dia < res2.hora.dia) {
         return 0;
@@ -322,9 +323,10 @@ int compare_reservas_time(Reserva res1, Reserva res2) {
         } else { // Mesma hora
             if (res1.hora.minutos < res2.hora.minutos) {
                 return 0;
-            } else {
+            } else if (res1.hora.minutos > res2.hora.minutos) {
                 return 1;
-            }
+            } else // Mesmo minuto -> IGUAL
+                return 2;
         }
     }
 }
@@ -355,7 +357,6 @@ void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int
             novo_no->next = current->next;
             current->next = novo_no;
         }
-
         lista->size += 1;
     }
     /*
