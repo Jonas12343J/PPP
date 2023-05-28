@@ -4,9 +4,8 @@
 int main() {
 
     int option = 1;
-    int clientID, sucesso = 0, reservationID;
+    int clientID, sucesso = 0, reservationID, dia, hora, minuto;
     tipoReserva tipoRes;
-    char dia[2], hora[2], minuto[2];
 
 
     ListaReservas *listaReservas = create_lista_reservas();
@@ -34,40 +33,49 @@ int main() {
             }
 
             printf("Qual o dia pretendido?\n");
-            scanf("%s", dia);
+            scanf("%d", &dia);
             // Proteção básica, nao há necessidade de fazer algo mais elaborado para o conceito do exercício
-            while(atoi(dia) < 1 || atoi(dia) > 31){
+            while(dia < 1 || dia > 31){
                 printf("Dia invalido!\nQual o dia pretendido?\n");
-                scanf("%s", dia);
+                scanf("%d", &dia);
             }
-            print_reservas_dia(listaReservas, atoi(dia));
-            while(sucesso == 0 || sucesso == 2) {
+            print_reservas_dia(listaReservas, dia);
+            //while(sucesso == 0 || sucesso == 2) {
                 printf("\nEscolha a hora desejada (hora:minutos)\n");
-                scanf("%s:%s", hora, minuto);
-                sucesso = check_disponibilidade(listaReservas, atoi(dia), atoi(hora), atoi(minuto), tipoRes, clientID);
-            }
-            if(sucesso == 1) {
-                insert_reserva(listaReservas, clientID, tipoRes, atoi(dia), atoi(hora), atoi(minuto));
+                minuto = 0;
+                scanf("%d:%d", &hora, &minuto);
+
+                // TODO refazer esta funcao
+                // Procurar o spor certo primeiro maybe
+                //sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes, clientID);
+            //}
+            //if(sucesso == 1) {
+                insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
                 ++reserva_autoID;
-            }
-            sucesso = 0;
+            //}
+            //sucesso = 0;
         }
 
         // ------------------------CANCELAR-RESERVA------------------------
         else if (option == 2) {
             //PRINT FULL LIST
-            print_reservas(listaReservas);
-            printf("Que reserva pretende cancelar?\n");
-            scanf("%d", &reservationID);
-            cancela_reserva(listaReservas, reservationID);
+            if(print_reservas(listaReservas)) {
+                printf("Que reserva pretende cancelar?\n");
+                scanf("%d", &reservationID);
+                cancela_reserva(listaReservas, reservationID);
+            }
         }
 
             // ------------------------CANCELAR-PRE-RESERVA------------------------
         else if (option == 3) {
             // PRINT FULL LIST
-            // ESCOLHER A RESERVA
-            // PRINT PRÉ-RESERVAS DESSA HORA
-
+            if(print_reservas(listaReservas)) {
+                // ESCOLHER A RESERVA
+                printf("Escolha uma reserva\n");
+                scanf("%d", &reservationID);
+                // PRINT PRÉ-RESERVAS DESSA HORA
+                print_pre_reservas(listaReservas, reservationID);
+            }
         }
 
         // --------------------------LIST-ALL--------------------------
