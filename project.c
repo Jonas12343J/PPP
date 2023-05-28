@@ -349,7 +349,7 @@ void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int
         } else {
             NoListaReservas *current = lista->start;
             // while: Existir um next e esse next for (temporalmente) depois do nosso novo_no
-            while (current->next != NULL && compare_reservas_time(current->next->reserva, novo_no->reserva)) {
+            while (current->next != NULL && compare_reservas_time(novo_no->reserva, current->next->reserva)) {
                 current = current->next;
             }
             novo_no->next = current->next;
