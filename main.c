@@ -41,22 +41,23 @@ int main() {
             }
             print_reservas_dia(listaReservas, dia);
             //while(sucesso == 0 || sucesso == 2) {
-                printf("\nEscolha a hora desejada (hora:minutos)\n");
-                minuto = 0;
-                scanf("%d:%d", &hora, &minuto);
+            printf("\nEscolha a hora desejada (hora:minutos)\n");
+            minuto = 0;
+            scanf("%d:%d", &hora, &minuto);
 
-                // TODO refazer esta funcao
-                // Procurar o spor certo primeiro maybe
-                //sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes, clientID);
+
+            // TODO refazer esta funcao
+            // Procurar o spor certo primeiro maybe
+            //sucesso = check_disponibilidade(listaReservas, dia, hora, minuto, tipoRes, clientID);
             //}
             //if(sucesso == 1) {
-                insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
-                ++reserva_autoID;
+            insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
+            ++reserva_autoID;
             //}
             //sucesso = 0;
         }
 
-        // ------------------------CANCELAR-RESERVA------------------------
+            // ------------------------CANCELAR-RESERVA------------------------
         else if (option == 2) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas)) {
@@ -78,22 +79,22 @@ int main() {
             }
         }
 
-        // --------------------------LIST-ALL--------------------------
+            // --------------------------LIST-ALL--------------------------
         else if (option == 4) {
 
         }
 
-        // --------------------------LIST-CLIENT--------------------------
+            // --------------------------LIST-CLIENT--------------------------
         else if (option == 5) {
 
         }
 
-        // --------------------------SAVE--------------------------
+            // --------------------------SAVE--------------------------
         else if (option == 6) {
 
         }
 
-        // --------------------------LOAD--------------------------
+            // --------------------------LOAD--------------------------
         else if (option == 7) {
 
         }
