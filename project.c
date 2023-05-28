@@ -176,43 +176,43 @@ int print_reservas(ListaReservas *lista) {
 
 // Mostra as pré-reservas de um slot
 void print_pre_reservas(ListaReservas *lista, int reservationID) {
-        int found = 0;
-        NoListaReservas *current = lista->start;
-        while (current) {
-            if (current->reserva.ID == reservationID) {
-                found = 1;
-                break;
-            }
-            current = current->next;
+    int found = 0;
+    NoListaReservas *current = lista->start;
+    while (current) {
+        if (current->reserva.ID == reservationID) {
+            found = 1;
+            break;
         }
+        current = current->next;
+    }
 
-        if (found) {
-            if(current->listaPreReservas->size > 0) {
-                NoListaPre_Reservas *curr_pre = current->listaPreReservas->start;
-                printf("-------------------------PRE_RESERVAS-------------------------\n");
-                for (int i = 0; i < lista->size; ++i) {
-                    char tipoRstr[10];
-                    strcpy(tipoRstr, curr_pre->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                    printf("\n  %d - Dia %d - %d:%d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
-                           curr_pre->reserva.hora.hora,
-                           curr_pre->reserva.hora.minutos,
-                           tipoRstr);
-                    curr_pre = curr_pre->next;
-                }
-                printf("----------------------------------------------------------\n\n");
-                int pre_reservationID;
-                scanf("%d", &pre_reservationID);
-                cancela_pre_reserva(current->listaPreReservas, pre_reservationID);
-                return;
+    if (found) {
+        if(current->listaPreReservas->size > 0) {
+            NoListaPre_Reservas *curr_pre = current->listaPreReservas->start;
+            printf("-------------------------PRE_RESERVAS-------------------------\n");
+            for (int i = 0; i < lista->size; ++i) {
+                char tipoRstr[10];
+                strcpy(tipoRstr, curr_pre->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                printf("\n  %d - Dia %d - %d:%d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
+                       curr_pre->reserva.hora.hora,
+                       curr_pre->reserva.hora.minutos,
+                       tipoRstr);
+                curr_pre = curr_pre->next;
             }
-            else {
-                printf("Sem pre-reservas para este bloco!\n\n");
-                usleep(500000);
-            }
+            printf("----------------------------------------------------------\n\n");
+            int pre_reservationID;
+            scanf("%d", &pre_reservationID);
+            cancela_pre_reserva(current->listaPreReservas, pre_reservationID);
+            return;
         }
         else {
-            printf("ID de reserva nao encontrado!\n\n");
+            printf("Sem pre-reservas para este bloco!\n\n");
+            usleep(500000);
         }
+    }
+    else {
+        printf("ID de reserva nao encontrado!\n\n");
+    }
 }
 
 // Cancela uma reserva
@@ -414,6 +414,7 @@ insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int c
     ++lista_pre->size;
     ++pre_reserva_autoID;
 }
+
 
 // Menu de opções
 void menu_inicial() {
