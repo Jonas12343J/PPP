@@ -69,6 +69,7 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
 
     if(lista->start == NULL) {
         lista->start = novo_no;
+        ++lista->size;
         return;
     }
 
