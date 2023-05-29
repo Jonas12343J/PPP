@@ -9,6 +9,7 @@ int main() {
 
 
     ListaReservas *listaReservas = create_lista_reservas();
+    Client *root = NULL;
     while (option) {
         menu_inicial();
         fflush(stdin);
@@ -18,6 +19,7 @@ int main() {
         if (option == 1) {
             printf("Insira o ID do cliente\n");
             scanf("%d", &clientID);
+            insert(root, clientID);
             printf("Escolha o tipo de operacao (M/L)\n");
             char tipoR[2];
             scanf("%s", tipoR);
@@ -71,13 +73,26 @@ int main() {
             }
         }
 
-            // --------------------------LIST-ALL--------------------------
+        // --------------------------LIST-ALL--------------------------
         else if (option == 4) {
             list_all(listaReservas);
         }
 
             // --------------------------LIST-CLIENT--------------------------
         else if (option == 5) {
+            if (listaReservas->size > 0){
+                printf("\n-------------------------CLIENTES-------------------------\n");
+                inorderTraversal(root);
+                printf("----------------------------------------------------------\n\n");
+                printf("Escolha um cliente\n");
+                scanf("%d", &clientID);
+                printf("\n---------------------------RESERVAS-----------------------\n");
+                list_client(listaReservas->start, clientID);
+                printf("----------------------------------------------------------\n\n");
+            }
+            else {
+                printf("Sem reservas registadas!\n");
+            }
 
         }
 
