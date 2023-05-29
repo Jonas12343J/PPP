@@ -59,7 +59,7 @@ int main() {
         // ------------------------CANCELAR-RESERVA------------------------
         else if (option == 2) {
             //PRINT FULL LIST
-            if(print_reservas(listaReservas)) {
+            if(print_reservas(listaReservas, true)) {
                 printf("Que reserva pretende cancelar?\n");
                 scanf("%d", &reservationID);
                 cancela_reserva(listaReservas, reservationID);
@@ -69,17 +69,13 @@ int main() {
         // ------------------------CANCELAR-PRE-RESERVA------------------------
         else if (option == 3) {
             // PRINT FULL LIST
-            if(print_reservas(listaReservas)) {
+            if(print_reservas(listaReservas, false)) {
                 // ESCOLHER A RESERVA
                 printf("Escolha uma reserva\n");
                 scanf("%d", &reservationID);
-                // PRINT PRÉ-RESERVAS DESSA HORA
+                // PRINT PRÉ-RESERVAS DESSA HORA (O CANCEL É CHAMADO NELE)
                 if (print_pre_reservas(listaReservas, reservationID)) {
-                    // ESCOLHER A PRÉ-RESERVA
-                    printf("Escolha uma pre-reserva\n");
-                    scanf("%d", &pre_reservationID);
-                    ListaPre_Reservas *lista_pre = get_list_pre(listaReservas, reservationID);
-                    cancela_pre_reserva(lista_pre, pre_reservationID);
+                    printf("Pre-reserva cancelada!\n");
                 }
             }
         }

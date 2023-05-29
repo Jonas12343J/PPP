@@ -107,21 +107,40 @@ void print_reservas_dia(ListaReservas *lista, int dia) {
 }
 
 // Mostra as reservas todas
-int print_reservas(ListaReservas *lista) {
+int print_reservas(ListaReservas *lista, bool flag) {
     if (lista->size > 0) {
+        int found = 0;
         printf("\n---------------------------RESERVAS-----------------------\n");
         NoListaReservas *current = lista->start;
 
         while(current) {
-            char tipoRstr[15];
-            strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-            printf("\t%d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
-                   current->reserva.hora.hora,
-                   current->reserva.hora.minutos,
-                   tipoRstr);
+            if (flag){
+                char tipoRstr[15];
+                strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                printf("\t%d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
+                       current->reserva.hora.hora,
+                       current->reserva.hora.minutos,
+                       tipoRstr);
+            }
+            else {
+                if (current->listaPreReservas->start){
+                    found = 1;
+                    char tipoRstr[15];
+                    strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                    printf("\t%d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
+                           current->reserva.hora.hora,
+                           current->reserva.hora.minutos,
+                           tipoRstr);
+                }
+            }
             current = current->next;
         }
+
         printf("----------------------------------------------------------\n\n");
+        if(!found) {
+            printf("Sem blocos com pre-reservas associados!\n\n");
+            return 0;
+        }
         return 1;
     } else {
         printf("Sem reservas efetuadas!\n\n");

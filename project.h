@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #ifndef PROJETO_PROJECT_H
 #define PROJETO_PROJECT_H
@@ -85,7 +86,7 @@ void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
 
 int compare_reservas_time(Reserva res1, Reserva res2);
-int print_reservas(ListaReservas *lista);
+int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
 
 Client* insert(Client *root, int clientID);
