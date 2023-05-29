@@ -149,8 +149,8 @@ void print_reservas_dia(ListaReservas *lista, int dia) {
         int flag = 0;
         NoListaReservas *current = lista->start;
 
-        for (int i = 0; i < lista->size; ++i) {
-            char tipoRstr[10];
+        while(current) {
+            char tipoRstr[15];
             strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
 
             if (current->reserva.hora.dia == dia && flag == 0) {
@@ -160,12 +160,12 @@ void print_reservas_dia(ListaReservas *lista, int dia) {
                 printf("\n%d:%d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
                        tipoRstr, current->reserva.tipo.duracao);
             } else if (current->reserva.hora.dia == dia && flag != 0) {
-                printf("\n%d:%d -> %s (%d minutos)", current->reserva.hora.hora, current->reserva.hora.minutos,
+                printf("%d:%d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
                        tipoRstr, current->reserva.tipo.duracao);
             }
             current = current->next;
         }
-        printf("\n\n");
+        printf("\n");
         if (flag == 0) {
             printf("Sem reservas para esse dia!\n");
         }
@@ -180,8 +180,8 @@ int print_reservas(ListaReservas *lista) {
         printf("-------------------------RESERVAS-------------------------\n");
         NoListaReservas *current = lista->start;
 
-        for (int i = 0; i < lista->size; ++i) {
-            char tipoRstr[10];
+        while(current) {
+            char tipoRstr[15];
             strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
             printf("\n  %d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
                    current->reserva.hora.hora,
@@ -215,7 +215,7 @@ void print_pre_reservas(ListaReservas *lista, int reservationID) {
             NoListaPre_Reservas *curr_pre = current->listaPreReservas->start;
             printf("-------------------------PRE_RESERVAS-------------------------\n");
             for (int i = 0; i < lista->size; ++i) {
-                char tipoRstr[10];
+                char tipoRstr[15];
                 strcpy(tipoRstr, curr_pre->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
                 printf("\n  %d - Dia %d - %d:%d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
                        curr_pre->reserva.hora.hora,
