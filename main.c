@@ -3,6 +3,9 @@
 
 int main() {
 
+    FILE *log, *bin_file;
+
+
     int option = 1;
     int clientID, reservationID, dia, hora, minuto;
     tipoReserva tipoRes;
@@ -51,7 +54,7 @@ int main() {
             insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
         }
 
-            // ------------------------CANCELAR-RESERVA------------------------
+        // ------------------------CANCELAR-RESERVA------------------------
         else if (option == 2) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas)) {
@@ -61,7 +64,7 @@ int main() {
             }
         }
 
-            // ------------------------CANCELAR-PRE-RESERVA------------------------
+        // ------------------------CANCELAR-PRE-RESERVA------------------------
         else if (option == 3) {
             // PRINT FULL LIST
             if(print_reservas(listaReservas)) {
@@ -78,7 +81,7 @@ int main() {
             list_all(listaReservas);
         }
 
-            // --------------------------LIST-CLIENT--------------------------
+        // --------------------------LIST-CLIENT--------------------------
         else if (option == 5) {
             if (listaReservas->size > 0){
                 printf("\n-------------------------CLIENTES-------------------------\n");
@@ -93,15 +96,25 @@ int main() {
             else {
                 printf("Sem reservas registadas!\n");
             }
-
         }
 
-            // --------------------------SAVE--------------------------
+        // --------------------------SAVE--------------------------
         else if (option == 6) {
+            bin_file = fopen("bin_file.bin", "wb");
+            if(bin_file == NULL) {
+                printf("Failed to open the file\n");
+                return 1;
+            }
+            // Write the struct to the file
+            fwrite(&listaReservas, sizeof(ListaReservas), 1, bin_file);
 
+            // Close the file
+            fclose(bin_file);
+
+            printf("\nDados salvos no ficheiro binario!\n");
         }
 
-            // --------------------------LOAD--------------------------
+        // --------------------------LOAD--------------------------
         else if (option == 7) {
 
         }
