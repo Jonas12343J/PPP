@@ -68,6 +68,7 @@ typedef struct Client {
 ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next);
+ListaPre_Reservas *get_list_pre(ListaReservas *lista, int reservationID);
 Client *createNode(int clientID);
 //Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
 
@@ -75,7 +76,6 @@ Client *createNode(int clientID);
 //void print_sorted(ListaReservas *lptr);
 void menu_inicial();
 void print_reservas_dia(ListaReservas *lista, int dia);
-void print_pre_reservas(ListaReservas *lista, int reservationID);
 void cancela_reserva(ListaReservas *lista, int reservationID);
 void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
@@ -86,6 +86,7 @@ void inorderTraversal(Client *root);
 
 int compare_reservas_time(Reserva res1, Reserva res2);
 int print_reservas(ListaReservas *lista);
+int print_pre_reservas(ListaReservas *lista, int reservationID);
 
 Client* insert(Client *root, int clientID);
 #endif //PROJETO_PROJECT_H

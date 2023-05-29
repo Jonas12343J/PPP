@@ -1,13 +1,15 @@
 #include "project.h"
 
 
+ListaPre_Reservas *get_list_pre(ListaReservas *pReservas, int id);
+
 int main() {
 
     FILE *log, *bin_file;
 
 
     int option = 1;
-    int clientID, reservationID, dia, hora, minuto;
+    int clientID, reservationID, pre_reservationID, dia, hora, minuto;
     tipoReserva tipoRes;
 
 
@@ -72,7 +74,13 @@ int main() {
                 printf("Escolha uma reserva\n");
                 scanf("%d", &reservationID);
                 // PRINT PRÉ-RESERVAS DESSA HORA
-                print_pre_reservas(listaReservas, reservationID);
+                if (print_pre_reservas(listaReservas, reservationID)) {
+                    // ESCOLHER A PRÉ-RESERVA
+                    printf("Escolha uma pre-reserva\n");
+                    scanf("%d", &pre_reservationID);
+                    ListaPre_Reservas *lista_pre = get_list_pre(listaReservas, reservationID);
+                    cancela_pre_reserva(lista_pre, pre_reservationID);
+                }
             }
         }
 
@@ -134,6 +142,7 @@ int main() {
     }
     return 0;
 }
+
 
 
 

@@ -36,6 +36,23 @@ NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int 
     return current;
 }
 
+// Busca uma lista de pré-reservas
+ListaPre_Reservas *get_list_pre(ListaReservas *lista, int reservationID) {
+    NoListaReservas *previous, *current, *no_a_remover;
+    previous = no_a_remover = NULL;
+    current = lista->start;
+    while (current) {
+        if (current->reserva.ID == reservationID) {
+            no_a_remover = current;
+            break;
+        }
+        previous = current;
+        current = current->next;
+    }
+    return current->listaPreReservas;
+}
+
+
 // Cria novo nó para a árvore
 Client *createNode(int clientID) {
     Client *newNode = (Client *) malloc(sizeof(Client));
@@ -114,7 +131,7 @@ int print_reservas(ListaReservas *lista) {
 }
 
 // Mostra as pré-reservas de um slot
-void print_pre_reservas(ListaReservas *lista, int reservationID) {
+int print_pre_reservas(ListaReservas *lista, int reservationID) {
     int found = 0;
     NoListaReservas *current = lista->start;
     while (current) {
@@ -142,15 +159,18 @@ void print_pre_reservas(ListaReservas *lista, int reservationID) {
             int pre_reservationID;
             scanf("%d", &pre_reservationID);
             cancela_pre_reserva(current->listaPreReservas, pre_reservationID);
-            return;
+            return 1;
         } else {
             printf("Sem pre-reservas para este bloco!\n\n");
             usleep(500000);
+            return 0;
         }
     } else {
         printf("ID de reserva nao encontrado!\n\n");
+        return 0;
     }
 }
+
 
 // Função para imprimir a árvore de clientes em ordem
 void inorderTraversal(Client * root) {
