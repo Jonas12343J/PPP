@@ -71,6 +71,7 @@ void cancela_reserva(ListaReservas *lista, int reservationID);
 void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID);
+void list_all(ListaReservas *lista);
 
 int func_comp(const void *a, const void *b);
 int check_disponibilidade(ListaReservas *lista, int dia, int hora, int minuto, tipoReserva tipoRes, int clientID);

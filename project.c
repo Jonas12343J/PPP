@@ -179,8 +179,7 @@ void print_reservas_dia(ListaReservas *lista, int dia) {
 // Mostra as reservas todas
 int print_reservas(ListaReservas *lista) {
     if (lista->size > 0) {
-
-        printf("-------------------------RESERVAS-------------------------\n");
+        printf("\n---------------------------RESERVAS-----------------------\n");
         NoListaReservas *current = lista->start;
 
         while(current) {
@@ -241,6 +240,7 @@ void print_pre_reservas(ListaReservas *lista, int reservationID) {
 }
 
 // Cancela uma reserva
+//TODO SEGMENTATION FAULT BUG NO CANCELA
 void cancela_reserva(ListaReservas *lista, int reservationID) {
     if (lista->size > 0) {
         NoListaReservas *previous, *current, *no_a_remover;
@@ -422,6 +422,26 @@ void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, 
         }
         ++lista_pre->size;
         ++pre_reserva_autoID;
+    }
+}
+
+// Lista todas as reservas (mais antigas primeiro)
+void list_all(ListaReservas *lista) {
+    if(lista->size > 0) {
+        NoListaReservas *current = lista->start;
+        printf("\n---------------------------RESERVAS-----------------------\n");
+        while (current) {
+            char tipoRstr[15];
+            strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+            printf("\tDia %d - %d:%d -> %s\n", current->reserva.hora.dia,
+                   current->reserva.hora.hora, current->reserva.hora.minutos, tipoRstr);
+            current = current->next;
+        }
+        printf("----------------------------------------------------------\n\n");
+        usleep(500000);
+    }
+    else {
+        printf("Sem reservas registadas!\n");
     }
 }
 
