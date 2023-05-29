@@ -11,6 +11,7 @@ int main() {
     ListaReservas *listaReservas = create_lista_reservas();
     while (option) {
         menu_inicial();
+        fflush(stdin);
         scanf("%d", &option);
 
         // --------------------------NOVA-RESERVA--------------------------
