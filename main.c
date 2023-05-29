@@ -22,7 +22,7 @@ int main() {
         if (option == 1) {
             printf("Insira o ID do cliente\n");
             scanf("%d", &clientID);
-            insert(root, clientID);
+            root = insert(root, clientID);
             printf("Escolha o tipo de operacao (M/L)\n");
             char tipoR[2];
             scanf("%s", tipoR);
@@ -102,11 +102,12 @@ int main() {
         else if (option == 6) {
             bin_file = fopen("bin_file.bin", "wb");
             if(bin_file == NULL) {
-                printf("Failed to open the file\n");
+                printf("Failed to write the file\n");
                 return 1;
             }
             // Write the struct to the file
             fwrite(&listaReservas, sizeof(ListaReservas), 1, bin_file);
+            //fwrite(&listaReservas, sizeof(ListaReservas) * listaReservas->size, 1, bin_file);
 
             // Close the file
             fclose(bin_file);
@@ -116,6 +117,18 @@ int main() {
 
         // --------------------------LOAD--------------------------
         else if (option == 7) {
+            bin_file = fopen("bin_file.bin", "rb");
+            if (bin_file == NULL) {
+                printf("Failed to read the file\n");
+                return 1;
+            }
+
+            // Read the struct from the file
+            fread(&listaReservas, sizeof(ListaReservas), 1, bin_file);
+            //fread(&listaReservas, sizeof(ListaReservas) * listaReservas->size, 1, bin_file);
+
+            // Close the file
+            fclose(bin_file);
 
         }
     }
