@@ -70,6 +70,7 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
     if(lista->start == NULL) {
         lista->start = novo_no;
         ++lista->size;
+        ++reserva_autoID;
         return;
     }
 
@@ -91,6 +92,7 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
         novo_no->next = lista->start;
         lista->start = novo_no;
         ++lista->size;
+        ++reserva_autoID;
     } else if (current != NULL) {
         int previous_end = (previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
                             previous->reserva.tipo.duracao);
@@ -101,6 +103,7 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
             previous->next = novo_no;
             novo_no->next = current;
             ++lista->size;
+            ++reserva_autoID;
         }
             // Se a reserva anterior acabar depois da nova começar OR a nova acabar depois da atual começar
         else if ((previous_end > new_start) || (new_end > current_start)) {
@@ -111,12 +114,13 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
         int previous_end = (previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
                             previous->reserva.tipo.duracao);
         if(previous_end > new_start) {
-            printf("Horariooo ja ocupado! Pedido movido para pre-reserva\n");
+            printf("Horario ja ocupado! Pedido movido para pre-reserva\n");
             insert_pre_reserva(previous->listaPreReservas, previous, clientID, tipoRes, dia, hora, minuto);
         } else {
             previous->next = novo_no;
             novo_no->next = current;
             ++lista->size;
+            ++reserva_autoID;
         }
     }
 
@@ -183,7 +187,7 @@ int print_reservas(ListaReservas *lista) {
         while(current) {
             char tipoRstr[15];
             strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-            printf("\n  %d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
+            printf("%d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
                    current->reserva.hora.hora,
                    current->reserva.hora.minutos,
                    tipoRstr);
@@ -217,7 +221,7 @@ void print_pre_reservas(ListaReservas *lista, int reservationID) {
             for (int i = 0; i < lista->size; ++i) {
                 char tipoRstr[15];
                 strcpy(tipoRstr, curr_pre->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                printf("\n  %d - Dia %d - %d:%d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
+                printf("  %d - Dia %d - %d:%d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
                        curr_pre->reserva.hora.hora,
                        curr_pre->reserva.hora.minutos,
                        tipoRstr);
