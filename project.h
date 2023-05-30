@@ -68,8 +68,7 @@ typedef struct Client {
 //funcoes
 ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
-NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next);
-ListaPre_Reservas *get_list_pre(ListaReservas *lista, int reservationID);
+NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next, int next_start);
 Client *createNode(int clientID);
 //Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
 
@@ -80,10 +79,12 @@ void print_reservas_dia(ListaReservas *lista, int dia);
 void cancela_reserva(ListaReservas *lista, int reservationID);
 void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
+void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre);
 void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID);
 void list_all(ListaReservas *lista);
 void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
+
 
 int compare_reservas_time(Reserva res1, Reserva res2);
 int print_reservas(ListaReservas *lista, bool flag);

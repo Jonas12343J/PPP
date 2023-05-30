@@ -1,8 +1,5 @@
 #include "project.h"
 
-
-ListaPre_Reservas *get_list_pre(ListaReservas *pReservas, int id);
-
 int main() {
 
     FILE *log, *bin_file;
