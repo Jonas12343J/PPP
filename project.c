@@ -6,6 +6,7 @@
 
 int reserva_autoID = 0;
 int pre_reserva_autoID = 0;
+char out[256];
 
 ListaPre_Reservas *create_lista_pre_reservas() {
     ListaPre_Reservas *lista = malloc(sizeof(ListaPre_Reservas));
@@ -71,17 +72,17 @@ void print_reservas_dia(ListaReservas *lista, int dia) {
         int flag = 0;
         NoListaReservas *current = lista->start;
 
-        while(current) {
+        while (current) {
             char tipoRstr[15];
             strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
 
             if (current->reserva.hora.dia == dia && flag == 0) {
                 flag = 1;
                 printf("Existem as seguintes reservas para o dia %d:\n", dia);
-                printf("\n%d:%d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
+                printf("\n%02d:%02d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
                        tipoRstr, current->reserva.tipo.duracao);
             } else if (current->reserva.hora.dia == dia && flag != 0) {
-                printf("%d:%d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
+                printf("%02d:%02d -> %s (%d minutos)\n", current->reserva.hora.hora, current->reserva.hora.minutos,
                        tipoRstr, current->reserva.tipo.duracao);
             }
             current = current->next;
@@ -101,21 +102,20 @@ int print_reservas(ListaReservas *lista, bool flag) {
         printf("\n---------------------------RESERVAS-----------------------\n");
         NoListaReservas *current = lista->start;
 
-        while(current) {
-            if (flag == true){
+        while (current) {
+            if (flag == true) {
                 char tipoRstr[15];
                 strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                printf("\t%d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
+                printf("\t%d - Dia %d - %02d:%02d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
                        current->reserva.hora.hora,
                        current->reserva.hora.minutos,
                        tipoRstr);
-            }
-            else if (flag == false) {
-                if (current->listaPreReservas->start){
+            } else if (flag == false) {
+                if (current->listaPreReservas->start) {
                     found = 1;
                     char tipoRstr[15];
                     strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                    printf("\t%d - Dia %d - %d:%d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
+                    printf("\t%d - Dia %d - %02d:%02d -> %s\n", current->reserva.ID, current->reserva.hora.dia,
                            current->reserva.hora.hora,
                            current->reserva.hora.minutos,
                            tipoRstr);
@@ -124,7 +124,7 @@ int print_reservas(ListaReservas *lista, bool flag) {
             current = current->next;
         }
         printf("----------------------------------------------------------\n\n");
-        if(!found && flag == false) {
+        if (!found && flag == false) {
             printf("Sem blocos com pre-reservas associados!\n\n");
             return 0;
         }
@@ -155,7 +155,7 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
             while (curr_pre) {
                 char tipoRstr[15];
                 strcpy(tipoRstr, curr_pre->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                printf("\t%d - Dia %d - %d:%d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
+                printf("\t%d - Dia %d - %02d:%02d -> %s\n", curr_pre->reserva.ID, curr_pre->reserva.hora.dia,
                        curr_pre->reserva.hora.hora, curr_pre->reserva.hora.minutos, tipoRstr);
                 curr_pre = curr_pre->next;
             }
@@ -164,7 +164,7 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
 
             int pre_reservationID;
             scanf("%d", &pre_reservationID);
-            cancela_pre_reserva(current->listaPreReservas, pre_reservationID);
+            cancela_pre_reserva(current->listaPreReservas, pre_reservationID, true);
             return 1;
         } else {
             printf("Sem pre-reservas para este bloco!\n\n");
@@ -188,7 +188,7 @@ void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre) {
 }
 
 // Função para imprimir a árvore de clientes em ordem
-void inorderTraversal(Client * root) {
+void inorderTraversal(Client *root) {
     if (root != NULL) {
         inorderTraversal(root->left);
         printf("%d\n", root->clientID);
@@ -221,8 +221,9 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
             // Se tiver pré-reservas
             if (no_a_remover->listaPreReservas->start) {
                 //-------------------
-                if(no_a_remover->next) {
-                    int next_start = (no_a_remover->next->reserva.hora.hora * 60) + no_a_remover->next->reserva.hora.minutos;
+                if (no_a_remover->next) {
+                    int next_start =
+                            (no_a_remover->next->reserva.hora.hora * 60) + no_a_remover->next->reserva.hora.minutos;
                     int current_start = (no_a_remover->reserva.hora.hora * 60) + no_a_remover->reserva.hora.minutos;
                     int time_to_next = next_start - current_start;
                     NoListaPre_Reservas *no_preR;
@@ -230,9 +231,20 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                     if (no_preR) {// Passa a pré-reserva correta para a lista de reservas
                         pre_to_reserva(current, no_preR);
                         // Tirar este elemento das pre reservas
-                        cancela_pre_reserva(current->listaPreReservas, no_preR->reserva.ID);
-                    }
-                    else {
+                        cancela_pre_reserva(current->listaPreReservas, no_preR->reserva.ID, false);
+                        //------------UPDATE-LOG---------------
+                        char tipoRstr[15], tipoPRstr[15];
+                        strcpy(tipoRstr, no_a_remover->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                        strcpy(tipoPRstr, no_preR->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                        // TODO sprintf a mais?
+                        sprintf(out,
+                                "RESERVATION CANCELED! DAY %d - %s AT %02d:%02d\nPRE-RESERVATION MOVED TO NEW AVAILABLE SLOT! DAY %d - %s AT %02d:%02d\n\n",
+                                no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
+                                no_a_remover->reserva.hora.minutos, no_preR->reserva.hora.dia, tipoPRstr,
+                                no_preR->reserva.hora.hora, no_preR->reserva.hora.minutos);
+                        update_log(out);
+
+                    } else {
                         printf("Sem pre-reservas validas para o bloco libertado! Reserva eliminada!\n");
                         // Remover o 1º nó
                         if (previous == NULL)
@@ -240,6 +252,14 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                             // Restantes nós
                         else
                             previous->next = no_a_remover->next;
+
+                        //------------UPDATE-LOG---------------
+                        char tipoRstr[15];
+                        strcpy(tipoRstr, no_a_remover->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                        sprintf(out, "RESERVATION CANCELED! NO VALID PRE-RESERVATIONS! DAY %d - %s AT %02d:%02d\n\n",
+                                no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
+                                no_a_remover->reserva.hora.minutos);
+                        update_log(out);
 
                         free(no_a_remover);
                         --lista->size;
@@ -255,6 +275,14 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                 else
                     previous->next = no_a_remover->next;
 
+                //------------UPDATE-LOG---------------
+                char tipoRstr[15];
+                strcpy(tipoRstr, no_a_remover->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                sprintf(out, "RESERVATION CANCELED! NO PRE-RESERVATIONS FOUND! DAY %d - %s AT %02d:%02d\n\n",
+                        no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
+                        no_a_remover->reserva.hora.minutos);
+                update_log(out);
+
                 free(no_a_remover);
                 --lista->size;
             }
@@ -263,7 +291,7 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
 }
 
 // Cancela uma pré-reserva
-void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID) {
+void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID, bool isNotFromCancelR) {
     if (lista_pre->size > 0) {
         NoListaPre_Reservas *previous, *current, *no_a_remover;
         previous = no_a_remover = NULL;
@@ -290,6 +318,16 @@ void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID) {
                 // Restantes nós
             else
                 previous->next = no_a_remover->next;
+
+            if(isNotFromCancelR) {
+                //------------UPDATE-LOG---------------
+                char tipoRstr[15];
+                strcpy(tipoRstr, no_a_remover->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                sprintf(out, "PRE-RESERVATION CANCELED! DAY %d - %s AT %02d:%02d\n\n",
+                        no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
+                        no_a_remover->reserva.hora.minutos);
+                update_log(out);
+            }
 
             free(no_a_remover);
             lista_pre->size -= 1;
@@ -320,10 +358,15 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
     novo_no->listaPreReservas = create_lista_pre_reservas();
     novo_no->next = NULL;
 
-    if(lista->start == NULL) {
+    if (lista->start == NULL) {
         lista->start = novo_no;
         ++lista->size;
         ++reserva_autoID;
+        //------------UPDATE-LOG---------------
+        char tipoRstr[15];
+        strcpy(tipoRstr, novo_no->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+        sprintf(out, "NEW RESERVATION CREATED! DAY %d - %s AT %02d:%02d\n\n", dia, tipoRstr, hora, minuto);
+        update_log(out);
         return;
     }
 
@@ -336,7 +379,8 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
     // Se a nova reserva acabar depois da atual começar, ou se for no dia seguinte, vai ao next
     // Avança até encontrar um que comece depois da nova acabar OU NO FIM DA LISTA
     //printf("%d -> %d", novo_no->reserva.hora.dia, current->reserva.hora.dia);
-    while (current != NULL && (new_end > (current->reserva.hora.dia * 31 * 60 + current->reserva.hora.hora * 60 + current->reserva.hora.minutos))) {
+    while (current != NULL && (new_end > (current->reserva.hora.dia * 31 * 60 + current->reserva.hora.hora * 60 +
+                                          current->reserva.hora.minutos))) {
         previous = current;
         current = current->next;
     }
@@ -347,10 +391,17 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
         lista->start = novo_no;
         ++lista->size;
         ++reserva_autoID;
+        //------------UPDATE-LOG---------------
+        char tipoRstr[15];
+        strcpy(tipoRstr, novo_no->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+        sprintf(out, "NEW RESERVATION CREATED! DAY %d - %s AT %02d:%02d\n\n", dia, tipoRstr, hora, minuto);
+        update_log(out);
     } else if (current != NULL) {
-        int previous_end = (previous->reserva.hora.dia * 31 * 60 + previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
+        int previous_end = (previous->reserva.hora.dia * 31 * 60 + previous->reserva.hora.hora * 60 +
+                            previous->reserva.hora.minutos +
                             previous->reserva.tipo.duracao);
-        int current_start = (current->reserva.hora.dia * 31 * 60 + current->reserva.hora.hora * 60 + current->reserva.hora.minutos);
+        int current_start = (current->reserva.hora.dia * 31 * 60 + current->reserva.hora.hora * 60 +
+                             current->reserva.hora.minutos);
 
         // Se a reserva anterior terminar antes da nova começar AND e a nova acabar antes da atual começar -> SUCESSO
         if ((previous_end <= new_start) && (new_end <= current_start)) {
@@ -358,31 +409,55 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
             novo_no->next = current;
             ++lista->size;
             ++reserva_autoID;
+            //------------UPDATE-LOG---------------
+            char tipoRstr[15];
+            strcpy(tipoRstr, novo_no->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+            sprintf(out, "NEW RESERVATION CREATED! DAY %d - %s AT %02d:%02d\n\n", dia, tipoRstr, hora, minuto);
+            update_log(out);
         }
             // Se a reserva anterior acabar depois da nova começar OR a nova acabar depois da atual começar
         else if ((previous_end > new_start) || (new_end > current_start)) {
             printf("Horario ja ocupado! Pedido movido para pre-reserva\n");
             insert_pre_reserva(current->listaPreReservas, current, clientID, tipoRes, dia, hora, minuto);
+            //------------UPDATE-LOG---------------
+            char tipoRstr[15];
+            strcpy(tipoRstr, novo_no->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+            sprintf(out, "NO SPOT AVAILABLE! NEW PRE-RESERVATION CREATED! DAY %d - %s AT %02d:%02d\n\n", dia, tipoRstr, hora,
+                    minuto);
+            update_log(out);
         }
     } else {
-        int previous_end = (previous->reserva.hora.dia * 31 * 60 + previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
+        int previous_end = (previous->reserva.hora.dia * 31 * 60 + previous->reserva.hora.hora * 60 +
+                            previous->reserva.hora.minutos +
                             previous->reserva.tipo.duracao);
-        if(previous_end > new_start) {
+        if (previous_end > new_start) {
             printf("Horario ja ocupado! Pedido movido para pre-reserva\n");
             insert_pre_reserva(previous->listaPreReservas, previous, clientID, tipoRes, dia, hora, minuto);
+            //------------UPDATE-LOG---------------
+            char tipoRstr[15];
+            strcpy(tipoRstr, novo_no->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+            sprintf(out, "NO SPOT AVAILABLE! NEW PRE-RESERVATION CREATED! DAY %d - %s AT %02d:%02d\n\n", dia, tipoRstr, hora,
+                    minuto);
+            update_log(out);
         } else {
             previous->next = novo_no;
             novo_no->next = current;
             ++lista->size;
             ++reserva_autoID;
+            //------------UPDATE-LOG---------------
+            char tipoRstr[15];
+            strcpy(tipoRstr, novo_no->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+            sprintf(out, "NEW RESERVATION CREATED! DAY %d - %s AT %02d:%02d\n\n", dia, tipoRstr, hora, minuto);
+            update_log(out);
         }
     }
 
 }
 
 // Cria uma pré-reserva
-void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia,
-                        int hora, int minuto) {
+void
+insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia,
+                   int hora, int minuto) {
     NoListaPre_Reservas *novo_no = malloc(sizeof(NoListaPre_Reservas));
     if (novo_no) {
         novo_no->reserva.clientID = clientId;
@@ -419,22 +494,22 @@ void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, 
 
 // Lista todas as reservas (mais antigas primeiro)
 void list_all(ListaReservas *lista) {
-    if(lista->size > 0) {
+    if (lista->size > 0) {
         NoListaReservas *current = lista->start;
         printf("\n---------------------------RESERVAS-----------------------\n");
         while (current) {
             char tipoRstr[15];
             strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-            printf("\tDia %d - %d:%d -> %s\n", current->reserva.hora.dia,
+            printf("\tDia %d - %02d:%02d -> %s\n", current->reserva.hora.dia,
                    current->reserva.hora.hora, current->reserva.hora.minutos, tipoRstr);
 
             // Listar também as pré-reservas (caso existam)
-            if(current->listaPreReservas) {
+            if (current->listaPreReservas) {
                 NoListaPre_Reservas *pre_current = current->listaPreReservas->start;
-                while (pre_current){
+                while (pre_current) {
                     char tipoStr_pre[15];
                     strcpy(tipoStr_pre, pre_current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                    printf("\tDia %d - %d:%d -> %s (pre-reserva)\n", pre_current->reserva.hora.dia,
+                    printf("\tDia %d - %02d:%02d -> %s (pre-reserva)\n", pre_current->reserva.hora.dia,
                            pre_current->reserva.hora.hora, pre_current->reserva.hora.minutos, tipoStr_pre);
                     pre_current = pre_current->next;
                 }
@@ -443,31 +518,30 @@ void list_all(ListaReservas *lista) {
         }
         printf("----------------------------------------------------------\n\n");
         usleep(500000);
-    }
-    else {
+    } else {
         printf("Sem reservas registadas!\n");
     }
 }
 
 // Lista todas as reservas e pré-reservas de um cliente (mais recentes primeiro)
 void list_client(NoListaReservas *node, int clientID) {
-    if(node == NULL)
+    if (node == NULL)
         return;
 
     // Chamada recursiva
     list_client(node->next, clientID);
 
-    if(node->reserva.clientID == clientID) {
+    if (node->reserva.clientID == clientID) {
         char tipoRstr[15];
         strcpy(tipoRstr, node->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-        printf("\tDia %d - %d:%d -> %s\n", node->reserva.hora.dia,
+        printf("\tDia %d - %02d:%02d -> %s\n", node->reserva.hora.dia,
                node->reserva.hora.hora, node->reserva.hora.minutos, tipoRstr);
-        if(node->listaPreReservas) {
+        if (node->listaPreReservas) {
             NoListaPre_Reservas *pre_current = node->listaPreReservas->start;
             while (pre_current) {
                 char tipoStr_pre[15];
                 strcpy(tipoStr_pre, pre_current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                printf("\tDia %d - %d:%d -> %s (pre-reserva)\n", pre_current->reserva.hora.dia,
+                printf("\tDia %d - %02d:%02d -> %s (pre-reserva)\n", pre_current->reserva.hora.dia,
                        pre_current->reserva.hora.hora, pre_current->reserva.hora.minutos, tipoStr_pre);
                 pre_current = pre_current->next;
             }
@@ -490,9 +564,23 @@ void menu_inicial() {
     printf("------------------------------------------------------\n\n  -> ");
 }
 
+// Atualiza ficheiro de texto com informações relevantes
+void update_log(char msg[256]) {
+
+    FILE *file = fopen("log.txt", "a");
+    if (file == NULL) {
+        printf("Failed to update file\n");
+        return;
+    }
+    fputs(msg, file);
+
+    fclose(file);
+}
+
+// Salva os dados das listas de reservas e pré-reservas num ficheiro binário
 void saveLinkedListToFile(NoListaReservas *node) {
 
-    FILE* file = fopen("bin_file.bin", "wb");
+    FILE *file = fopen("bin_file.bin", "wb");
     if (file == NULL) {
         printf("Failed to write the file\n");
         return;
@@ -524,10 +612,13 @@ void saveLinkedListToFile(NoListaReservas *node) {
     }
 
     fclose(file);
+    //------------UPDATE-LOG---------------
+    update_log("DATA SAVED IN BINARY FILE!\n");
 }
 
+// Carrega os dados do ficheiro binário para as listas
 NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
-    FILE* file = fopen("bin_file.bin", "rb");
+    FILE *file = fopen("bin_file.bin", "rb");
     if (file == NULL) {
         printf("Failed to open the file for reading.\n");
         return NULL;
@@ -541,7 +632,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
     Reserva mainData;
     int hasAuxList;
     while (fread(&mainData, sizeof(Reserva), 1, file) == 1) {
-        NoListaReservas *newNode = (NoListaReservas *)malloc(sizeof(NoListaReservas));
+        NoListaReservas *newNode = (NoListaReservas *) malloc(sizeof(NoListaReservas));
         newNode->reserva = mainData;
         printf("%d", mainData.hora.hora);
         printf("%d %d\n", newNode->reserva.hora.hora, newNode->reserva.tipo.duracao);
@@ -559,7 +650,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
             Reserva auxData;
             while (fread(&auxData, sizeof(Reserva), 1, file) == 1) {
 
-                NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *)malloc(sizeof(NoListaPre_Reservas ));
+                NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *) malloc(sizeof(NoListaPre_Reservas));
                 newAuxNode->reserva = auxData;
                 newAuxNode->next = NULL;
 
@@ -572,7 +663,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
                 }
                 ++auxListSize;
             }
-            newNode->listaPreReservas = (ListaPre_Reservas*) malloc(sizeof(ListaPre_Reservas));
+            newNode->listaPreReservas = (ListaPre_Reservas *) malloc(sizeof(ListaPre_Reservas));
             newNode->listaPreReservas->start = auxHead;
             newNode->listaPreReservas->size = auxListSize;
         }
@@ -589,5 +680,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
 
     *mainListSize = size;
     fclose(file);
+    //------------UPDATE-LOG---------------
+    update_log("DATA RESTORED FROM BINARY FILE!\n");
     return head;
 }

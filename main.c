@@ -9,12 +9,12 @@ int main() {
         printf("getcwd error\n");
         return 0;
     }
+
     //Works on the current directory
     if (chdir(cwd) != 0) {
         printf("chdir error\n");
         return 0;
     }
-
     int option = 1;
     int clientID, reservationID, dia, hora, minuto;
     tipoReserva tipoRes;

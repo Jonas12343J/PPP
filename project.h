@@ -13,6 +13,7 @@
 
 extern int reserva_autoID;
 extern int pre_reserva_autoID;
+extern char out[256];
 
 enum tipo {
     Manutencao, Lavagem
@@ -78,11 +79,12 @@ void cancela_reserva(ListaReservas *lista, int reservationID);
 void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
 void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre);
-void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID);
+void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID, bool isNotFromCancelR);
 void list_all(ListaReservas *lista);
 void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
 void saveLinkedListToFile(NoListaReservas *node);
+void update_log(char msg[256]);
 
 int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
