@@ -2,8 +2,18 @@
 
 int main() {
 
-    FILE *log, *bin_file;
-
+    // DIRECTORY
+    char cwd[1024];
+    //Finds current working directory
+    if (getcwd(cwd, sizeof(cwd)) == NULL) {
+        printf("getcwd error\n");
+        return 0;
+    }
+    //Works on the current directory
+    if (chdir(cwd) != 0) {
+        printf("chdir error\n");
+        return 0;
+    }
 
     int option = 1;
     int clientID, reservationID, pre_reservationID, dia, hora, minuto;
@@ -101,35 +111,14 @@ int main() {
 
         // --------------------------SAVE--------------------------
         else if (option == 6) {
-            bin_file = fopen("bin_file.bin", "wb");
-            if(bin_file == NULL) {
-                printf("Failed to write the file\n");
-                return 1;
-            }
-            // Write the struct to the file
-            fwrite(&listaReservas, sizeof(ListaReservas), 1, bin_file);
-            //fwrite(&listaReservas, sizeof(ListaReservas) * listaReservas->size, 1, bin_file);
-
-            // Close the file
-            fclose(bin_file);
-
+            saveLinkedListToFile(listaReservas->start);
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
         // --------------------------LOAD--------------------------
         else if (option == 7) {
-            bin_file = fopen("bin_file.bin", "rb");
-            if (bin_file == NULL) {
-                printf("Failed to read the file\n");
-                return 1;
-            }
 
-            // Read the struct from the file
-            fread(&listaReservas, sizeof(ListaReservas), 1, bin_file);
-            //fread(&listaReservas, sizeof(ListaReservas) * listaReservas->size, 1, bin_file);
-
-            // Close the file
-            fclose(bin_file);
+            printf("\nDados do ficheiro binario carregados!\n");
 
         }
     }

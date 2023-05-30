@@ -517,3 +517,91 @@ void menu_inicial() {
     printf("\t0 - QUIT\n");
     printf("------------------------------------------------------\n\n  -> ");
 }
+
+void saveLinkedListToFile(NoListaReservas *node) {
+
+    FILE* file = fopen("bin_file.bin", "wb");
+    if (file == NULL) {
+        printf("Failed to write the file\n");
+        return;
+    }
+
+    // Percorre a lista principal e escreve cada nó no arquivo
+    NoListaReservas *current = node;
+    while (current != NULL) {
+        // Escreve os dados do nó principal
+        fwrite(&(current->reserva), sizeof(int), 1, file);
+
+        // Verifica se a lista auxiliar está presente
+        int hasAuxList = (current->listaPreReservas != NULL) ? 1 : 0;
+        fwrite(&hasAuxList, sizeof(int), 1, file);
+
+        // Se a lista auxiliar estiver presente, escreve seus dados
+        if (hasAuxList) {
+            NoListaPre_Reservas *auxCurrent = current->listaPreReservas->start;
+            while (auxCurrent != NULL) {
+                fwrite(&(auxCurrent->reserva), sizeof(int), 1, file);
+                auxCurrent = auxCurrent->next;
+            }
+        }
+
+        current = current->next;
+    }
+
+    fclose(file);
+}
+
+NoListaReservas *loadLinkedListFromFile() {
+    FILE* file = fopen("bin_file.bin", "rb");
+    if (file == NULL) {
+        printf("Failed to open the file for reading.\n");
+        return NULL;
+    }
+
+    NoListaReservas *head = NULL;
+    NoListaReservas *current = NULL;
+
+    // Lê os dados do arquivo e cria nós para cada valor lido
+    Reserva mainData;
+    int hasAuxList;
+    while (fread(&mainData, sizeof(int), 1, file) == 1) {
+        NoListaReservas *newNode = (NoListaReservas *)malloc(sizeof(NoListaReservas));
+        newNode->reserva = mainData;
+        newNode->next = NULL;
+        newNode->listaPreReservas = NULL;
+
+        fread(&hasAuxList, sizeof(int), 1, file);
+        if (hasAuxList) {
+            NoListaPre_Reservas *auxHead = NULL;
+            NoListaPre_Reservas *auxCurrent = NULL;
+
+            Reserva auxData;
+            while (fread(&auxData, sizeof(int), 1, file) == 1) {
+                NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *)malloc(sizeof(NoListaPre_Reservas ));
+                newAuxNode->reserva = auxData;
+                newAuxNode->next = NULL;
+
+                if (auxHead == NULL) {
+                    auxHead = newAuxNode;
+                    auxCurrent = auxHead;
+                } else {
+                    auxCurrent->next = newAuxNode;
+                    auxCurrent = auxCurrent->next;
+                }
+            }
+
+            newNode->listaPreReservas->start = auxHead;
+        }
+
+        if (head == NULL) {
+            head = newNode;
+            current = head;
+        } else {
+            current->next = newNode;
+            current = current->next;
+        }
+    }
+
+    fclose(file);
+    return head;
+}

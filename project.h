@@ -84,7 +84,7 @@ void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID);
 void list_all(ListaReservas *lista);
 void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
-
+void saveLinkedListToFile(NoListaReservas *node);
 
 int compare_reservas_time(Reserva res1, Reserva res2);
 int print_reservas(ListaReservas *lista, bool flag);
