@@ -16,7 +16,7 @@ int main() {
     }
 
     int option = 1;
-    int clientID, reservationID, pre_reservationID, dia, hora, minuto;
+    int clientID, reservationID, dia, hora, minuto;
     tipoReserva tipoRes;
 
 
@@ -108,18 +108,27 @@ int main() {
                 printf("Sem reservas registadas!\n");
             }
         }
-
-        // --------------------------SAVE--------------------------
+            // --------------------REALIZAR-RESERVA--------------------
         else if (option == 6) {
+            //PRINT FULL LIST
+            if(print_reservas(listaReservas, true)) {
+                printf("Que reserva pretende realizar?\n");
+                scanf("%d", &reservationID);
+
+            }
+
+        }
+
+            // --------------------------SAVE--------------------------
+        else if (option == 7) {
             saveLinkedListToFile(listaReservas->start);
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
         // --------------------------LOAD--------------------------
-        else if (option == 7) {
-
+        else if (option == 8) {
+            listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
             printf("\nDados do ficheiro binario carregados!\n");
-
         }
     }
     return 0;

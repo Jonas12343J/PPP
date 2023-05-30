@@ -70,6 +70,7 @@ ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next, int next_start);
 Client *createNode(int clientID);
+NoListaReservas *loadLinkedListFromFile(int *mainListSize);
 //Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
 
 

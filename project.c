@@ -299,11 +299,6 @@ void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID) {
     }
 }
 
-// Cancela uma pré-reserva dando o seu ID
-void cancela_pre_reserva2(ListaReservas *lista, int pre_reservationID) {
-
-}
-
 // Funcão que vai verificar se uma reserva é antes ou depois (temporalmente) em relação a outra
 // Returns: 0 para anterior // 1 para posterior // 2 para igual
 int compare_reservas_time(Reserva res1, Reserva res2) {
@@ -512,8 +507,9 @@ void menu_inicial() {
     printf("\t3 - Cancelar pre-reserva\n");
     printf("\t4 - Listar todas reservas\n");
     printf("\t5 - Listar reservas de cliente\n");
-    printf("\t6 - Salvar reservas\n");
-    printf("\t7 - Carregar reservas\n");
+    printf("\t6 - Realizar uma reserva\n");
+    printf("\t7 - Salvar reservas\n");
+    printf("\t8 - Carregar reservas\n");
     printf("\t0 - QUIT\n");
     printf("------------------------------------------------------\n\n  -> ");
 }
@@ -533,11 +529,14 @@ void saveLinkedListToFile(NoListaReservas *node) {
         fwrite(&(current->reserva), sizeof(int), 1, file);
 
         // Verifica se a lista auxiliar está presente
-        int hasAuxList = (current->listaPreReservas != NULL) ? 1 : 0;
+        int hasAuxList = (current->listaPreReservas->start != NULL) ? 1 : 0;
         fwrite(&hasAuxList, sizeof(int), 1, file);
 
         // Se a lista auxiliar estiver presente, escreve seus dados
         if (hasAuxList) {
+            int auxListSize = current->listaPreReservas->size;
+            fwrite(&auxListSize, sizeof(int), 1, file);
+
             NoListaPre_Reservas *auxCurrent = current->listaPreReservas->start;
             while (auxCurrent != NULL) {
                 fwrite(&(auxCurrent->reserva), sizeof(int), 1, file);
@@ -551,12 +550,13 @@ void saveLinkedListToFile(NoListaReservas *node) {
     fclose(file);
 }
 
-NoListaReservas *loadLinkedListFromFile() {
+NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
     FILE* file = fopen("bin_file.bin", "rb");
     if (file == NULL) {
         printf("Failed to open the file for reading.\n");
         return NULL;
     }
+     int size = 0;
 
     NoListaReservas *head = NULL;
     NoListaReservas *current = NULL;
@@ -572,11 +572,14 @@ NoListaReservas *loadLinkedListFromFile() {
 
         fread(&hasAuxList, sizeof(int), 1, file);
         if (hasAuxList) {
+
+            int auxListSize = 0;
             NoListaPre_Reservas *auxHead = NULL;
             NoListaPre_Reservas *auxCurrent = NULL;
 
             Reserva auxData;
             while (fread(&auxData, sizeof(int), 1, file) == 1) {
+
                 NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *)malloc(sizeof(NoListaPre_Reservas ));
                 newAuxNode->reserva = auxData;
                 newAuxNode->next = NULL;
@@ -588,9 +591,11 @@ NoListaReservas *loadLinkedListFromFile() {
                     auxCurrent->next = newAuxNode;
                     auxCurrent = auxCurrent->next;
                 }
+                ++auxListSize;
             }
-
+            newNode->listaPreReservas = (ListaPre_Reservas*) malloc(sizeof(ListaPre_Reservas));
             newNode->listaPreReservas->start = auxHead;
+            newNode->listaPreReservas->size = auxListSize;
         }
 
         if (head == NULL) {
@@ -600,8 +605,10 @@ NoListaReservas *loadLinkedListFromFile() {
             current->next = newNode;
             current = current->next;
         }
+        ++size;
     }
 
+    *mainListSize = size;
     fclose(file);
     return head;
 }
