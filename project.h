@@ -71,10 +71,7 @@ ListaPre_Reservas *create_lista_pre_reservas();
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next, int next_start);
 Client *createNode(int clientID);
 NoListaReservas *loadLinkedListFromFile(int *mainListSize);
-//Reserva create_reserva(int clientId, tipoReserva tipoR, horarioReserva horas);
 
-
-//void print_sorted(ListaReservas *lptr);
 void menu_inicial();
 void print_reservas_dia(ListaReservas *lista, int dia);
 void cancela_reserva(ListaReservas *lista, int reservationID);
@@ -87,7 +84,6 @@ void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
 void saveLinkedListToFile(NoListaReservas *node);
 
-int compare_reservas_time(Reserva res1, Reserva res2);
 int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
 

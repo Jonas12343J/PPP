@@ -197,7 +197,6 @@ void inorderTraversal(Client * root) {
 }
 
 // Cancela uma reserva
-//TODO SEGMENTATION FAULT BUG NO CANCELA
 void cancela_reserva(ListaReservas *lista, int reservationID) {
     if (lista->size > 0) {
         NoListaReservas *previous, *current, *no_a_remover;
@@ -217,7 +216,7 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
             return;
         }
 
-        // Encontrou a reserva a ser cancelada
+            // Encontrou a reserva a ser cancelada
         else {
             // Se tiver pré-reservas
             if (no_a_remover->listaPreReservas->start) {
@@ -283,41 +282,18 @@ void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID) {
             return;
         }
 
-        // Encontrou a reserva a ser cancelada
+            // Encontrou a reserva a ser cancelada
         else {
             // Remover o 1º nó
             if (previous == NULL)
                 lista_pre->start = no_a_remover->next;
-            // Restantes nós
+                // Restantes nós
             else
                 previous->next = no_a_remover->next;
 
             free(no_a_remover);
             lista_pre->size -= 1;
 
-        }
-    }
-}
-
-// Funcão que vai verificar se uma reserva é antes ou depois (temporalmente) em relação a outra
-// Returns: 0 para anterior // 1 para posterior // 2 para igual
-int compare_reservas_time(Reserva res1, Reserva res2) {
-    if (res1.hora.dia < res2.hora.dia) {
-        return 0;
-    } else if (res1.hora.dia > res2.hora.dia) {
-        return 1;
-    } else {  //Mesmo dia
-        if (res1.hora.hora < res2.hora.hora) {
-            return 0;
-        } else if (res1.hora.hora > res2.hora.hora) {
-            return 1;
-        } else { // Mesma hora
-            if (res1.hora.minutos < res2.hora.minutos) {
-                return 0;
-            } else if (res1.hora.minutos > res2.hora.minutos) {
-                return 1;
-            } else // Mesmo minuto -> IGUAL
-                return 2;
         }
     }
 }
@@ -406,7 +382,7 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
 
 // Cria uma pré-reserva
 void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia,
-                   int hora, int minuto) {
+                        int hora, int minuto) {
     NoListaPre_Reservas *novo_no = malloc(sizeof(NoListaPre_Reservas));
     if (novo_no) {
         novo_no->reserva.clientID = clientId;
@@ -431,7 +407,7 @@ void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, 
             lista_pre->start = novo_no;
         }
 
-        // restantes casos
+            // restantes casos
         else {
             novo_no->next = current_pre;
             previous_pre->next = novo_no;
@@ -526,7 +502,7 @@ void saveLinkedListToFile(NoListaReservas *node) {
     NoListaReservas *current = node;
     while (current != NULL) {
         // Escreve os dados do nó principal
-        fwrite(&(current->reserva), sizeof(int), 1, file);
+        fwrite(&(current->reserva), sizeof(Reserva), 1, file);
 
         // Verifica se a lista auxiliar está presente
         int hasAuxList = (current->listaPreReservas->start != NULL) ? 1 : 0;
@@ -539,7 +515,7 @@ void saveLinkedListToFile(NoListaReservas *node) {
 
             NoListaPre_Reservas *auxCurrent = current->listaPreReservas->start;
             while (auxCurrent != NULL) {
-                fwrite(&(auxCurrent->reserva), sizeof(int), 1, file);
+                fwrite(&(auxCurrent->reserva), sizeof(Reserva), 1, file);
                 auxCurrent = auxCurrent->next;
             }
         }
@@ -556,7 +532,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
         printf("Failed to open the file for reading.\n");
         return NULL;
     }
-     int size = 0;
+    int size = 0;
 
     NoListaReservas *head = NULL;
     NoListaReservas *current = NULL;
@@ -564,9 +540,12 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
     // Lê os dados do arquivo e cria nós para cada valor lido
     Reserva mainData;
     int hasAuxList;
-    while (fread(&mainData, sizeof(int), 1, file) == 1) {
+    while (fread(&mainData, sizeof(Reserva), 1, file) == 1) {
         NoListaReservas *newNode = (NoListaReservas *)malloc(sizeof(NoListaReservas));
         newNode->reserva = mainData;
+        printf("%d", mainData.hora.hora);
+        printf("%d %d\n", newNode->reserva.hora.hora, newNode->reserva.tipo.duracao);
+
         newNode->next = NULL;
         newNode->listaPreReservas = NULL;
 
@@ -578,7 +557,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
             NoListaPre_Reservas *auxCurrent = NULL;
 
             Reserva auxData;
-            while (fread(&auxData, sizeof(int), 1, file) == 1) {
+            while (fread(&auxData, sizeof(Reserva), 1, file) == 1) {
 
                 NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *)malloc(sizeof(NoListaPre_Reservas ));
                 newAuxNode->reserva = auxData;

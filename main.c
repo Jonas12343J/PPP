@@ -19,7 +19,6 @@ int main() {
     int clientID, reservationID, dia, hora, minuto;
     tipoReserva tipoRes;
 
-
     ListaReservas *listaReservas = create_lista_reservas();
     Client *root = NULL;
     while (option) {
@@ -63,7 +62,7 @@ int main() {
             insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
         }
 
-        // ------------------------CANCELAR-RESERVA------------------------
+            // ------------------------CANCELAR-RESERVA------------------------
         else if (option == 2) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
@@ -73,7 +72,7 @@ int main() {
             }
         }
 
-        // ------------------------CANCELAR-PRE-RESERVA------------------------
+            // ------------------------CANCELAR-PRE-RESERVA------------------------
         else if (option == 3) {
             // PRINT FULL LIST
             if(print_reservas(listaReservas, false)) {
@@ -87,12 +86,12 @@ int main() {
             }
         }
 
-        // --------------------------LIST-ALL--------------------------
+            // --------------------------LIST-ALL--------------------------
         else if (option == 4) {
             list_all(listaReservas);
         }
 
-        // --------------------------LIST-CLIENT--------------------------
+            // --------------------------LIST-CLIENT--------------------------
         else if (option == 5) {
             if (listaReservas->size > 0){
                 printf("\n-------------------------CLIENTES-------------------------\n");
@@ -125,7 +124,7 @@ int main() {
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
-        // --------------------------LOAD--------------------------
+            // --------------------------LOAD--------------------------
         else if (option == 8) {
             listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
             printf("\nDados do ficheiro binario carregados!\n");
@@ -133,7 +132,6 @@ int main() {
     }
     return 0;
 }
-
 
 
 
