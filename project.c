@@ -229,7 +229,6 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                     NoListaPre_Reservas *no_preR;
                     no_preR = get_pre_reservation_node(no_a_remover->listaPreReservas, time_to_next, next_start);
                     if (no_preR) {// Passa a pré-reserva correta para a lista de reservas
-                        printf("no if\n");
                         pre_to_reserva(current, no_preR);
                         // Tirar este elemento das pre reservas
                         cancela_pre_reserva(current->listaPreReservas, no_preR->reserva.ID);
@@ -360,12 +359,13 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
     NoListaReservas *current = lista->start;
     NoListaReservas *previous = NULL;
 
-    int new_start = (hora * 60 + minuto);
-    int new_end = (hora * 60 + minuto + tipoRes.duracao);
+    int new_start = (dia * 31 * 60 + hora * 60 + minuto);
+    int new_end = (dia * 31 * 60 + hora * 60 + minuto + tipoRes.duracao);
 
     // Se a nova reserva acabar depois da atual começar, ou se for no dia seguinte, vai ao next
     // Avança até encontrar um que comece depois da nova acabar OU NO FIM DA LISTA
-    while (current != NULL && (current->reserva.hora.dia > novo_no->reserva.hora.dia || (new_end > (current->reserva.hora.hora * 60 + current->reserva.hora.minutos)))) {
+    //printf("%d -> %d", novo_no->reserva.hora.dia, current->reserva.hora.dia);
+    while (current != NULL && (new_end > (current->reserva.hora.dia * 31 * 60 + current->reserva.hora.hora * 60 + current->reserva.hora.minutos))) {
         previous = current;
         current = current->next;
     }
@@ -377,9 +377,9 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
         ++lista->size;
         ++reserva_autoID;
     } else if (current != NULL) {
-        int previous_end = (previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
+        int previous_end = (previous->reserva.hora.dia * 31 * 60 + previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
                             previous->reserva.tipo.duracao);
-        int current_start = (current->reserva.hora.hora * 60 + current->reserva.hora.minutos);
+        int current_start = (current->reserva.hora.dia * 31 * 60 + current->reserva.hora.hora * 60 + current->reserva.hora.minutos);
 
         // Se a reserva anterior terminar antes da nova começar AND e a nova acabar antes da atual começar -> SUCESSO
         if ((previous_end <= new_start) && (new_end <= current_start)) {
@@ -394,7 +394,7 @@ void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int
             insert_pre_reserva(current->listaPreReservas, current, clientID, tipoRes, dia, hora, minuto);
         }
     } else {
-        int previous_end = (previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
+        int previous_end = (previous->reserva.hora.dia * 31 * 60 + previous->reserva.hora.hora * 60 + previous->reserva.hora.minutos +
                             previous->reserva.tipo.duracao);
         if(previous_end > new_start) {
             printf("Horario ja ocupado! Pedido movido para pre-reserva\n");
