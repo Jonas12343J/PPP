@@ -17,8 +17,10 @@ int main() {
         printf("chdir error\n");
         return 0;
     }
-    int option = 1;
-    int clientID, reservationID, dia, hora, minuto;
+    int option = 9;
+    //int clientID, reservationID, dia, hora, minuto;
+    int minuto;
+    char c_clientID[10], c_reservationID[10], c_dia[5], c_hora[50], c_minuto[50];
     tipoReserva tipoRes;
 
     ListaReservas *listaReservas = create_lista_reservas();
@@ -31,8 +33,14 @@ int main() {
         // --------------------------NOVA-RESERVA--------------------------
         if (option == 1) {
             printf("Insira o ID do cliente\n");
-            scanf("%d", &clientID);
-            root = insert(root, clientID);
+
+            scanf("%s", c_clientID);
+            while(atoi(c_clientID) == 0){
+                printf("Valor nao numerico introduzido!\n");
+                scanf("%s", c_clientID);
+            }
+
+            root = insert(root, atoi(c_clientID));
             printf("Escolha o tipo de operacao (M/L)\n");
             char tipoR[2];
             scanf("%s", tipoR);
@@ -49,19 +57,34 @@ int main() {
             }
 
             printf("Qual o dia pretendido?\n");
-            scanf("%d", &dia);
-            // Proteção básica, nao há necessidade de fazer algo mais elaborado para o conceito do exercício
-            while (dia < 1 || dia > 31) {
-                printf("Dia invalido!\nQual o dia pretendido?\n");
-                scanf("%d", &dia);
+
+            scanf("%s", c_dia);
+            while(atoi(c_dia) == 0){
+                printf("Valor nao numerico introduzido!\n");
+                scanf("%s", c_dia);
             }
-            print_reservas_dia(listaReservas, dia);
+
+            // Proteção básica, nao há necessidade de fazer algo mais elaborado para o conceito do exercício
+            while (atoi(c_dia) < 1 || atoi(c_dia) > 31) {
+                printf("Dia invalido!\nQual o dia pretendido?\n");
+                scanf("%s", c_dia);
+                while(atoi(c_dia) == 0){
+                    printf("Valor nao numerico introduzido!\n");
+                    scanf("%s", c_dia);
+                }
+            }
+            print_reservas_dia(listaReservas, atoi(c_dia));
 
             printf("\nEscolha a hora desejada (hora:minutos)\n");
             minuto = 0;
-            scanf("%d:%d", &hora, &minuto);
+            scanf("%s:%d", c_hora, &minuto);
 
-            insert_reserva(listaReservas, clientID, tipoRes, dia, hora, minuto);
+            while(atoi(c_hora) == 0){
+                printf("Valor nao numerico introduzido!\n");
+                scanf("%s", c_hora);
+            }
+
+            insert_reserva(listaReservas, atoi(c_clientID), tipoRes, atoi(c_dia), atoi(c_hora), minuto);
         }
 
             // ------------------------CANCELAR-RESERVA------------------------
@@ -69,8 +92,13 @@ int main() {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
                 printf("Que reserva pretende cancelar?\n");
-                scanf("%d", &reservationID);
-                cancela_reserva(listaReservas, reservationID);
+
+                scanf("%s", c_reservationID);
+                while(atoi(c_reservationID) == 0){
+                    printf("Valor nao numerico introduzido!\n");
+                    scanf("%s", c_reservationID);
+                }
+                cancela_reserva(listaReservas, atoi(c_reservationID));
             }
         }
 
@@ -80,9 +108,15 @@ int main() {
             if(print_reservas(listaReservas, false)) {
                 // ESCOLHER A RESERVA
                 printf("Escolha uma reserva\n");
-                scanf("%d", &reservationID);
+
+                scanf("%s", c_reservationID);
+                while(atoi(c_reservationID) == 0){
+                    printf("Valor nao numerico introduzido!\n");
+                    scanf("%s", c_reservationID);
+                }
+
                 // PRINT PRÉ-RESERVAS DESSA HORA (O CANCEL É CHAMADO NELE)
-                if (print_pre_reservas(listaReservas, reservationID)) {
+                if (print_pre_reservas(listaReservas, atoi(c_reservationID))) {
                     printf("Pre-reserva cancelada!\n");
                 }
             }
@@ -100,9 +134,13 @@ int main() {
                 inorderTraversal(root);
                 printf("----------------------------------------------------------\n\n");
                 printf("Escolha um cliente\n");
-                scanf("%d", &clientID);
+                scanf("%s", c_clientID);
+                while(atoi(c_clientID) == 0){
+                    printf("Valor nao numerico introduzido!\n");
+                    scanf("%s", c_clientID);
+                }
                 printf("\n---------------------------RESERVAS-----------------------\n");
-                list_client(listaReservas->start, clientID);
+                list_client(listaReservas->start, atoi(c_clientID));
                 printf("----------------------------------------------------------\n\n");
             }
             else {
@@ -114,10 +152,15 @@ int main() {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
                 printf("Que reserva pretende realizar?\n");
-                scanf("%d", &reservationID);
-                realiza_reserva(listaReservas, reservationID);
-            }
 
+                scanf("%s", c_reservationID);
+                while(atoi(c_reservationID) == 0){
+                    printf("Valor nao numerico introduzido!\n");
+                    scanf("%s", c_reservationID);
+                }
+
+                realiza_reserva(listaReservas, atoi(c_reservationID));
+            }
         }
 
             // --------------------------SAVE--------------------------
@@ -131,6 +174,10 @@ int main() {
             listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
             printf("\nDados do ficheiro binario carregados!\n");
         }
+
+        else
+            printf("Valor introduzido invalido!\n");
+
     }
     return 0;
 }

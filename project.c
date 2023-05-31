@@ -4,8 +4,8 @@
 
 #include "project.h"
 
-int reserva_autoID = 0;
-int pre_reserva_autoID = 0;
+int reserva_autoID = 1;
+int pre_reserva_autoID = 1;
 char out[256];
 
 ListaPre_Reservas *create_lista_pre_reservas() {
@@ -244,6 +244,8 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                                 no_preR->reserva.hora.hora, no_preR->reserva.hora.minutos);
                         update_log(out);
 
+                        printf("Reserva cancelada! Pre-reserva ocupou o slot disponivel!\n");
+
                     } else {
                         printf("Sem pre-reservas validas para o bloco libertado! Reserva eliminada!\n");
                         // Remover o 1º nó
@@ -260,6 +262,8 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                                 no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
                                 no_a_remover->reserva.hora.minutos);
                         update_log(out);
+
+                        printf("Reserva cancelada!\n");
 
                         free(no_a_remover);
                         --lista->size;
@@ -282,6 +286,8 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                         no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
                         no_a_remover->reserva.hora.minutos);
                 update_log(out);
+
+                printf("Reserva cancelada!\n");
 
                 free(no_a_remover);
                 --lista->size;
@@ -327,6 +333,9 @@ void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID, bool i
                         no_a_remover->reserva.hora.dia, tipoRstr, no_a_remover->reserva.hora.hora,
                         no_a_remover->reserva.hora.minutos);
                 update_log(out);
+
+                printf("Pre-reserva cancelada!\n");
+
             }
 
             free(no_a_remover);
