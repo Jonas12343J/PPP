@@ -113,7 +113,7 @@ int main() {
             if(print_reservas(listaReservas, true)) {
                 printf("Que reserva pretende realizar?\n");
                 scanf("%d", &reservationID);
-
+                realiza_reserva(listaReservas, reservationID);
             }
 
         }

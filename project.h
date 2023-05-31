@@ -85,6 +85,7 @@ void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
 void saveLinkedListToFile(NoListaReservas *node);
 void update_log(char msg[256]);
+void realiza_reserva(ListaReservas *lista, int reservationID);
 
 int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
