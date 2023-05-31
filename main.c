@@ -171,13 +171,13 @@ int main() {
 
         // --------------------------------SAVE--------------------------------
         else if (atoi(option) == 7) {
-            saveLinkedListToFile(listaReservas->start);
+            saveLinkedListToFile(listaReservas->start, root);
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
         // --------------------------------LOAD--------------------------------
         else if (atoi(option) == 8) {
-            listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
+            listaReservas->start = loadLinkedListFromFile(&listaReservas->size, &root);
             printf("\nDados do ficheiro binario carregados!\n");
         }
 
