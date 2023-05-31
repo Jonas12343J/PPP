@@ -52,17 +52,27 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
 
         fread(&hasAuxList, sizeof(int), 1, file);
         if (hasAuxList) {
-
             int auxListSize = 0;
+
             NoListaPre_Reservas *auxHead = NULL;
             NoListaPre_Reservas *auxCurrent = NULL;
 
-            Reserva auxData;
-            while (fread(&auxData, sizeof(Reserva), 1, file) == 1) {
+            while (1) {
+                Reserva auxData;
+                fread(&auxData, sizeof(Reserva), 1, file);
+
+                if (feof(file) || auxData.tipo.duracao == -1) {
+                    break;
+                }
 
                 NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *) malloc(sizeof(NoListaPre_Reservas));
                 newAuxNode->reserva = auxData;
                 newAuxNode->next = NULL;
+
+                char tipoRstr[15];
+                strcpy(tipoRstr, newAuxNode->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                printf("\n%02d:%02d -> %s (%d minutos)\n", newAuxNode->reserva.hora.hora, newAuxNode->reserva.hora.minutos,
+                       tipoRstr, newAuxNode->reserva.tipo.duracao);
 
                 if (auxHead == NULL) {
                     auxHead = newAuxNode;
@@ -72,6 +82,8 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
                     auxCurrent = auxCurrent->next;
                 }
                 ++auxListSize;
+
+                fread(&auxData, sizeof(Reserva), 1, file);
             }
             newNode->listaPreReservas = (ListaPre_Reservas *) malloc(sizeof(ListaPre_Reservas));
             newNode->listaPreReservas->start = auxHead;
@@ -702,6 +714,7 @@ void saveLinkedListToFile(NoListaReservas *node) {
             NoListaPre_Reservas *auxCurrent = current->listaPreReservas->start;
             while (auxCurrent != NULL) {
                 fwrite(&(auxCurrent->reserva), sizeof(Reserva), 1, file);
+
                 auxCurrent = auxCurrent->next;
             }
         }
