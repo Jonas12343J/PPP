@@ -35,14 +35,15 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot) {
         printf("Failed to open the file for reading.\n");
         return NULL;
     }
-    int size = 0;
 
+    int size = 0;
     NoListaReservas *head = NULL;
     NoListaReservas *current = NULL;
 
-    // Lê os dados do arquivo e cria nós para cada valor lido
+    // Read the data from the file and create nodes for each value
     Reserva mainData;
     int hasAuxList;
+    int auxListSize;
     while (fread(&mainData, sizeof(Reserva), 1, file) == 1) {
         NoListaReservas *newNode = (NoListaReservas *) malloc(sizeof(NoListaReservas));
         newNode->reserva = mainData;
@@ -52,22 +53,20 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot) {
 
         fread(&hasAuxList, sizeof(int), 1, file);
         if (hasAuxList) {
-            int auxListSize = 0;  // Initialize the auxiliary list size
-
+            auxListSize = 0;
             NoListaPre_Reservas *auxHead = NULL;
             NoListaPre_Reservas *auxCurrent = NULL;
 
-            // Read the auxiliary list nodes and increment the size
-            while (1) {
-                Reserva auxData;
-                if (fread(&auxData, sizeof(Reserva), 1, file) != 1) {
-                    break;  // Break the loop when there are no more nodes to read
-                }
-
+            Reserva auxData;
+            while (fread(&auxData, sizeof(Reserva), 1, file) == 1) {
                 NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *) malloc(sizeof(NoListaPre_Reservas));
                 newAuxNode->reserva = auxData;
                 newAuxNode->next = NULL;
 
+                char tipoRstr[15];
+                strcpy(tipoRstr, newAuxNode->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+                printf("\n%02d:%02d -> %s (%d minutos)\n", newAuxNode->reserva.hora.hora, newAuxNode->reserva.hora.minutos,
+                       tipoRstr, newAuxNode->reserva.tipo.duracao);
 
                 if (auxHead == NULL) {
                     auxHead = newAuxNode;
@@ -76,7 +75,7 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot) {
                     auxCurrent->next = newAuxNode;
                     auxCurrent = auxCurrent->next;
                 }
-                ++auxListSize;  // Increment the auxiliary list size
+                ++auxListSize;
             }
 
             newNode->listaPreReservas = (ListaPre_Reservas *) malloc(sizeof(ListaPre_Reservas));
