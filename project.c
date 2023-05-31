@@ -200,7 +200,7 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
                 curr_pre = curr_pre->next;
             }
             printf("----------------------------------------------------------\n\n");
-            printf("Que pre-reserva pretende cancelar?\n");
+            printf("Que pre-reserva pretende cancelar?\n")    ;
 
             int pre_reservationID;
             scanf("%d", &pre_reservationID);
@@ -332,7 +332,6 @@ void inorderTraversal(Client *root) {
 // Se sim, marca, se não pergunta se quer pré-reserva ou novo horário
 // 0 -> invalid // 1 -> vaga // 2 -> ocupado // 3 -> ficou em pré reserva
 void insert_reserva(ListaReservas *lista, int clientID, tipoReserva tipoRes, int dia, int hora, int minuto) {
-
     // Check input válido
     if (hora < 8 || ((hora * 60 + minuto) + tipoRes.duracao) > 18 * 60 || minuto < 0 || minuto > 59) {
         printf("Fora do horario de funcionamento!\n");
@@ -483,6 +482,8 @@ insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int c
         ++pre_reserva_autoID;
     }
 }
+
+
 
 // Cancela uma reserva
 void cancela_reserva(ListaReservas *lista, int reservationID) {
