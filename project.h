@@ -69,26 +69,25 @@ typedef struct Client {
 //funcoes
 ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
+NoListaReservas *loadLinkedListFromFile(int *mainListSize);
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next, int next_start);
 Client *createNode(int clientID);
-NoListaReservas *loadLinkedListFromFile(int *mainListSize);
+Client* insert(Client *root, int clientID);
 
 void menu_inicial();
 void print_reservas_dia(ListaReservas *lista, int dia);
-void cancela_reserva(ListaReservas *lista, int reservationID);
-void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
-void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
-void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre);
-void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID, bool isNotFromCancelR);
 void list_all(ListaReservas *lista);
 void list_client(NoListaReservas *node, int clientID);
 void inorderTraversal(Client *root);
-void saveLinkedListToFile(NoListaReservas *node);
-void update_log(char msg[256]);
+void insert_reserva(ListaReservas *lista, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
+void insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int clientId, tipoReserva tipoRes, int dia, int hora, int minuto);
+void cancela_reserva(ListaReservas *lista, int reservationID);
+void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID, bool isNotFromCancelR);
+void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre);
 void realiza_reserva(ListaReservas *lista, int reservationID);
 
+void saveLinkedListToFile(NoListaReservas *node);
 int print_reservas(ListaReservas *lista, bool flag);
-int print_pre_reservas(ListaReservas *lista, int reservationID);
 
-Client* insert(Client *root, int clientID);
+int print_pre_reservas(ListaReservas *lista, int reservationID);
 #endif //PROJETO_PROJECT_H

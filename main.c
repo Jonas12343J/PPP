@@ -17,8 +17,9 @@ int main() {
         printf("chdir error\n");
         return 0;
     }
+
     int option = 9;
-    //int clientID, reservationID, dia, hora, minuto;
+
     int minuto;
     char c_clientID[10], c_reservationID[10], c_dia[5], c_hora[50], c_minuto[50];
     tipoReserva tipoRes;
@@ -26,11 +27,13 @@ int main() {
     ListaReservas *listaReservas = create_lista_reservas();
     Client *root = NULL;
     while (option) {
+        // Inicializa a 9 por ser um valor não presente na lista de opções
+        // Caso o input esteja inválido (letra/cadeia) ele pede um novo
+        option = 9;
         menu_inicial();
-        fflush(stdin);
         scanf("%d", &option);
 
-        // --------------------------NOVA-RESERVA--------------------------
+        // ----------------------------NOVA-RESERVA----------------------------
         if (option == 1) {
             printf("Insira o ID do cliente\n");
 
@@ -87,7 +90,7 @@ int main() {
             insert_reserva(listaReservas, atoi(c_clientID), tipoRes, atoi(c_dia), atoi(c_hora), minuto);
         }
 
-            // ------------------------CANCELAR-RESERVA------------------------
+        // --------------------------CANCELAR-RESERVA--------------------------
         else if (option == 2) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
@@ -102,7 +105,7 @@ int main() {
             }
         }
 
-            // ------------------------CANCELAR-PRE-RESERVA------------------------
+        // ------------------------CANCELAR-PRE-RESERVA------------------------
         else if (option == 3) {
             // PRINT FULL LIST
             if(print_reservas(listaReservas, false)) {
@@ -122,12 +125,12 @@ int main() {
             }
         }
 
-            // --------------------------LIST-ALL--------------------------
+        // ------------------------------LIST-ALL------------------------------
         else if (option == 4) {
             list_all(listaReservas);
         }
 
-            // --------------------------LIST-CLIENT--------------------------
+        // ------------------------------LIST-CLIENT---------------------------
         else if (option == 5) {
             if (listaReservas->size > 0){
                 printf("\n-------------------------CLIENTES-------------------------\n");
@@ -147,7 +150,8 @@ int main() {
                 printf("Sem reservas registadas!\n");
             }
         }
-            // --------------------REALIZAR-RESERVA--------------------
+
+        // --------------------------REALIZAR-RESERVA--------------------------
         else if (option == 6) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
@@ -163,18 +167,19 @@ int main() {
             }
         }
 
-            // --------------------------SAVE--------------------------
+        // --------------------------------SAVE--------------------------------
         else if (option == 7) {
             saveLinkedListToFile(listaReservas->start);
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
-            // --------------------------LOAD--------------------------
+        // --------------------------------LOAD--------------------------------
         else if (option == 8) {
             listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
             printf("\nDados do ficheiro binario carregados!\n");
         }
 
+        // ----------------------------WRONG-INPUT-----------------------------
         else
             printf("Valor introduzido invalido!\n");
 

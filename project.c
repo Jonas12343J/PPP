@@ -8,8 +8,9 @@ int reserva_autoID = 1;
 int pre_reserva_autoID = 1;
 char out[256];
 
-ListaPre_Reservas *create_lista_pre_reservas() {
-    ListaPre_Reservas *lista = malloc(sizeof(ListaPre_Reservas));
+// Cria a lista de reservas
+ListaReservas *create_lista_reservas() {
+    ListaReservas *lista = malloc(sizeof(ListaReservas));
     if (lista) {
         lista->start = NULL;
         lista->size = 0;
@@ -17,8 +18,9 @@ ListaPre_Reservas *create_lista_pre_reservas() {
     return lista;
 }
 
-ListaReservas *create_lista_reservas() {
-    ListaReservas *lista = malloc(sizeof(ListaReservas));
+// Cria a lista de pré-reservas de um bloco específico
+ListaPre_Reservas *create_lista_pre_reservas() {
+    ListaPre_Reservas *lista = malloc(sizeof(ListaPre_Reservas));
     if (lista) {
         lista->start = NULL;
         lista->size = 0;
@@ -694,6 +696,8 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
     return head;
 }
 
+// Vai receber a reserva a realizar e executa uma a uma todas as anteriores até à desejada, inclusive
+// "Executa", aka, elimina da lista e dá um print a dizer que a realizou
 void realiza_reserva(ListaReservas *lista, int reservationID) {
     NoListaReservas *current = lista->start;
 
