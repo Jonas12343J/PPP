@@ -220,7 +220,7 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
 // Menu de opções
 void menu_inicial() {
     printf("\n-------------------------MENU-------------------------\n");
-    printf("\t1 - Efetuar reserva\n");
+    printf("\t1 - Criar reserva\n");
     printf("\t2 - Cancelar reserva\n");
     printf("\t3 - Cancelar pre-reserva\n");
     printf("\t4 - Listar todas reservas\n");
