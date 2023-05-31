@@ -671,7 +671,7 @@ void realiza_reserva(ListaReservas *lista, int reservationID) {
     NoListaReservas *current = lista->start;
 
     // While termina na reserva antes da que queremos realizar
-    while (current->reserva.ID != reservationID) {
+    while (current && current->reserva.ID != reservationID) {
         NoListaReservas *next = current->next;
         //------------UPDATE-LOG---------------
         char tipoRstr[15];
@@ -685,20 +685,24 @@ void realiza_reserva(ListaReservas *lista, int reservationID) {
         current = next;
         lista->size--;
     }
-    NoListaReservas *next = current->next;
-    //------------UPDATE-LOG---------------
-    char tipoRstr[15];
-    strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-    sprintf(out, "DAY %d - %s AT %02d:%02d EXECUTED!\n\n", current->reserva.hora.dia, tipoRstr, current->reserva.hora.hora, current->reserva.hora.minutos);
-    update_log(out);
+    if (current) {
+        NoListaReservas *next = current->next;
+        //------------UPDATE-LOG---------------
+        char tipoRstr[15];
+        strcpy(tipoRstr, current->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
+        sprintf(out, "DAY %d - %s AT %02d:%02d EXECUTED!\n\n", current->reserva.hora.dia, tipoRstr,
+                current->reserva.hora.hora, current->reserva.hora.minutos);
+        update_log(out);
 
-    printf("Realizando reserva %d (%s -> Dia %d as %02d:%02d)\n", current->reserva.ID, tipoRstr, current->reserva.hora.dia, current->reserva.hora.hora, current->reserva.hora.minutos);
-    usleep(500000);
+        printf("Realizando reserva %d (%s -> Dia %d as %02d:%02d)\n", current->reserva.ID, tipoRstr,
+               current->reserva.hora.dia, current->reserva.hora.hora, current->reserva.hora.minutos);
+        usleep(500000);
 
-    free(current);
-    current = next;
-    lista->size--;
-    lista->start = current;
+        free(current);
+        current = next;
+        lista->size--;
+        lista->start = current;
+    }
 }
 
 // Salva os dados das listas de reservas e pré-reservas num ficheiro binário
