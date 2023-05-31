@@ -202,7 +202,7 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
             printf("--------------------------------------------------------------\n\n");
             printf("Que pre-reserva pretende cancelar?\n");
             printf("----------------------------------------------------------\n\n");
-            printf("Que pre-reserva pretende cancelar?\n")    ;
+            printf("Que pre-reserva pretende cancelar?\n");
 
             int pre_reservationID;
             scanf("%d", &pre_reservationID);
