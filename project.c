@@ -63,11 +63,6 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot) {
                 newAuxNode->reserva = auxData;
                 newAuxNode->next = NULL;
 
-                char tipoRstr[15];
-                strcpy(tipoRstr, newAuxNode->reserva.tipo.tipoR == Manutencao ? "Manutencao" : "Lavagem");
-                printf("\n%02d:%02d -> %s (%d minutos)\n", newAuxNode->reserva.hora.hora, newAuxNode->reserva.hora.minutos,
-                       tipoRstr, newAuxNode->reserva.tipo.duracao);
-
                 if (auxHead == NULL) {
                     auxHead = newAuxNode;
                     auxCurrent = auxHead;
