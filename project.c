@@ -600,7 +600,7 @@ void cancela_pre_reserva(ListaPre_Reservas *lista_pre, int reservationID, bool i
         }
 
         if (!no_a_remover) {
-            printf("ID de pré-reserva nao encontrado\n");
+            printf("ID de pre-reserva nao encontrado\n");
             return;
         }
 
