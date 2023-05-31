@@ -67,11 +67,11 @@ typedef struct Client {
 //funcoes
 ListaReservas *create_lista_reservas();
 ListaPre_Reservas *create_lista_pre_reservas();
-NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot);
+NoListaReservas *loadLinkedListFromFile(int *mainListSize);
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next, int next_start);
 Client *createNode(int clientID);
 Client* insert(Client *root, int clientID);
-Client *readBinaryTreeFromFile(FILE *file);
+Client* loadClientTreeFromFile(FILE* file);
 
 int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
@@ -88,8 +88,8 @@ void cancela_reserva(ListaReservas *lista, int reservationID);
 void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID, bool isNotFromCancelR);
 void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre);
 void realiza_reserva(ListaReservas *lista, int reservationID);
-void saveLinkedListToFile(NoListaReservas *node, Client *treeRoot);
-void writeBinaryTreeToFile(Client *root, FILE *file);
+void saveLinkedListToFile(NoListaReservas *node);
+void saveClientTreeToFile(Client* root, FILE* file);
 void update_log(char msg[256]);
 
 #endif //PROJETO_PROJECT_H

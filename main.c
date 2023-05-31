@@ -174,13 +174,27 @@ int main() {
 
         // --------------------------------SAVE--------------------------------
         else if (atoi(option) == 7) {
-            saveLinkedListToFile(listaReservas->start, root);
+            saveLinkedListToFile(listaReservas->start);
+            FILE *file_clients = fopen("bin_clients.bin", "wb");
+            if (file_clients == NULL) {
+                printf("Unable to open file for writting\n");
+                return 1;
+            }
+            saveClientTreeToFile(root, file_clients);
+            fclose(file_clients);
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
         // --------------------------------LOAD--------------------------------
         else if (atoi(option) == 8) {
-            listaReservas->start = loadLinkedListFromFile(&listaReservas->size, &root);
+            FILE *file_clients = fopen("bin_clients.bin", "rb");
+            if (file_clients == NULL) {
+                printf("Unable to open file for reading\n");
+                return 1;
+            }
+            listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
+            root = loadClientTreeFromFile(file_clients);
+            fclose(file_clients);
             printf("\nDados do ficheiro binario carregados!\n");
         }
 

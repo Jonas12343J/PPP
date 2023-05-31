@@ -29,7 +29,7 @@ ListaPre_Reservas *create_lista_pre_reservas() {
 }
 
 // Carrega os dados do ficheiro binário para as listas
-NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot) {
+NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
     FILE *file = fopen("bin_file.bin", "rb");
     if (file == NULL) {
         printf("Failed to open the file for reading.\n");
@@ -90,8 +90,6 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize, Client **treeRoot) {
 
     *mainListSize = size;
 
-    // Read the binary tree from the file
-    *treeRoot = readBinaryTreeFromFile(file);
 
     fclose(file);
     //------------UPDATE-LOG---------------
@@ -139,18 +137,28 @@ Client *insert(Client *root, int clientID) {
 }
 
 // Carrega os dados do ficheiro binário para a árvore de clientes
-Client *readBinaryTreeFromFile(FILE *file) {
-    int clientID;
-    if (fread(&clientID, sizeof(int), 1, file) != 1) {
+Client* loadClientTreeFromFile(FILE* file) {
+    if (file == NULL) {
         return NULL;
     }
 
-    Client *newNode = (Client *) malloc(sizeof(Client));
-    newNode->clientID = clientID;
-    newNode->left = readBinaryTreeFromFile(file);
-    newNode->right = readBinaryTreeFromFile(file);
+    Client* root = NULL;
 
-    return newNode;
+    // Read the data from the file until the end is reached
+    while (!feof(file)) {
+        // Create a new client node
+        Client* client = (Client*)malloc(sizeof(Client));
+
+        // Read the client data from the file
+        if (fread(client, sizeof(Client), 1, file) != 1) {
+            free(client);
+            break;
+        }
+
+        // Insert the client into the tree
+        root = insert(root, client->clientID);
+    }
+    return root;
 }
 
 // Mostra as reservas todas
@@ -715,7 +723,7 @@ void realiza_reserva(ListaReservas *lista, int reservationID) {
 }
 
 // Salva os dados das listas de reservas e pré-reservas num ficheiro binário
-void saveLinkedListToFile(NoListaReservas *node, Client *treeRoot) {
+void saveLinkedListToFile(NoListaReservas *node) {
 
     FILE *file = fopen("bin_file.bin", "wb");
     if (file == NULL) {
@@ -747,26 +755,23 @@ void saveLinkedListToFile(NoListaReservas *node, Client *treeRoot) {
         current = current->next;
     }
 
-    // Write the binary tree to the file
-    writeBinaryTreeToFile(treeRoot, file);
-
     fclose(file);
     //------------UPDATE-LOG---------------
     update_log("DATA SAVED IN BINARY FILE!\n");
 }
 
 // Salva os dados da árvore de clientes no ficheiro binário
-void writeBinaryTreeToFile(Client *root, FILE *file) {
+void saveClientTreeToFile(Client* root, FILE* file) {
     if (root == NULL) {
         return;
     }
 
-    // Write the data of the current node
-    fwrite(&(root->clientID), sizeof(int), 1, file);
+    // Write the current client to the file
+    fwrite(root, sizeof(Client), 1, file);
 
-    // Recursively write the left and right subtrees
-    writeBinaryTreeToFile(root->left, file);
-    writeBinaryTreeToFile(root->right, file);
+    // Save the left and right subtrees recursively
+    saveClientTreeToFile(root->left, file);
+    saveClientTreeToFile(root->right, file);
 }
 
 // Atualiza ficheiro de texto com informações relevantes
