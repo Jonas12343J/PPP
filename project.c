@@ -483,8 +483,6 @@ insert_pre_reserva(ListaPre_Reservas *lista_pre, NoListaReservas *current, int c
     }
 }
 
-
-
 // Cancela uma reserva
 void cancela_reserva(ListaReservas *lista, int reservationID) {
     if (lista->size > 0) {
@@ -700,8 +698,6 @@ void saveLinkedListToFile(NoListaReservas *node) {
 
         // Se a lista auxiliar estiver presente, escreve seus dados
         if (hasAuxList) {
-            int auxListSize = current->listaPreReservas->size;
-            fwrite(&auxListSize, sizeof(int), 1, file);
 
             NoListaPre_Reservas *auxCurrent = current->listaPreReservas->start;
             while (auxCurrent != NULL) {
