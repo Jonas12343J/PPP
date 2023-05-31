@@ -75,6 +75,7 @@ Client *readBinaryTreeFromFile(FILE *file);
 
 int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
+int id_exists(ListaReservas *lista, int reservationID);
 
 void menu_inicial();
 void print_reservas_dia(ListaReservas *lista, int dia);

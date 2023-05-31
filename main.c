@@ -165,7 +165,10 @@ int main() {
                     scanf("%s", c_reservationID);
                 }
 
-                realiza_reserva(listaReservas, atoi(c_reservationID));
+                if(id_exists(listaReservas, atoi(c_reservationID)))
+                    realiza_reserva(listaReservas, atoi(c_reservationID));
+                else
+                    printf("ID nao encontrado!\n");
             }
         }
 

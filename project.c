@@ -241,6 +241,20 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
     }
 }
 
+// Verifica se ID introduzido exite na lista
+int id_exists(ListaReservas *lista, int reservationID) {
+    NoListaReservas *current = lista->start;
+    int exist = 0;
+    while (current) {
+        if(current->reserva.ID == reservationID) {
+            exist = 1;
+            break;
+        }
+        current = current->next;
+    }
+    return exist;
+}
+
 // Menu de opções
 void menu_inicial() {
     printf("\n-------------------------MENU-------------------------\n");
