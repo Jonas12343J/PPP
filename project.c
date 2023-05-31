@@ -52,17 +52,16 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
 
         fread(&hasAuxList, sizeof(int), 1, file);
         if (hasAuxList) {
-            int auxListSize = 0;
+            int auxListSize = 0;  // Initialize the auxiliary list size
 
             NoListaPre_Reservas *auxHead = NULL;
             NoListaPre_Reservas *auxCurrent = NULL;
 
+            // Read the auxiliary list nodes and increment the size
             while (1) {
                 Reserva auxData;
-                fread(&auxData, sizeof(Reserva), 1, file);
-
-                if (feof(file) || auxData.tipo.duracao == -1) {
-                    break;
+                if (fread(&auxData, sizeof(Reserva), 1, file) != 1) {
+                    break;  // Break the loop when there are no more nodes to read
                 }
 
                 NoListaPre_Reservas *newAuxNode = (NoListaPre_Reservas *) malloc(sizeof(NoListaPre_Reservas));
@@ -81,10 +80,9 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
                     auxCurrent->next = newAuxNode;
                     auxCurrent = auxCurrent->next;
                 }
-                ++auxListSize;
-
-                fread(&auxData, sizeof(Reserva), 1, file);
+                ++auxListSize;  // Increment the auxiliary list size
             }
+
             newNode->listaPreReservas = (ListaPre_Reservas *) malloc(sizeof(ListaPre_Reservas));
             newNode->listaPreReservas->start = auxHead;
             newNode->listaPreReservas->size = auxListSize;
