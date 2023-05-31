@@ -1,5 +1,7 @@
 #include "project.h"
 
+// NOTA: FICHEIROS BINÁRIOS E DE TEXTO SÃO CRIADOS NA PASTA cmake-build-debug!!!
+
 int main() {
 
     // DIRECTORY
