@@ -46,8 +46,6 @@ NoListaReservas *loadLinkedListFromFile(int *mainListSize) {
     while (fread(&mainData, sizeof(Reserva), 1, file) == 1) {
         NoListaReservas *newNode = (NoListaReservas *) malloc(sizeof(NoListaReservas));
         newNode->reserva = mainData;
-        printf("%d", mainData.hora.hora);
-        printf("%d %d\n", newNode->reserva.hora.hora, newNode->reserva.tipo.duracao);
 
         newNode->next = NULL;
         newNode->listaPreReservas = NULL;
@@ -230,7 +228,7 @@ void menu_inicial() {
     printf("\t6 - Realizar uma reserva\n");
     printf("\t7 - Salvar reservas\n");
     printf("\t8 - Carregar reservas\n");
-    printf("\t0 - QUIT\n");
+    printf("\t9 - QUIT\n");
     printf("------------------------------------------------------\n\n  -> ");
 }
 

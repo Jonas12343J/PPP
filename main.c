@@ -17,22 +17,27 @@ int main() {
         return 0;
     }
 
-    int option = 9;
+    char option[10] = "10";
     int minuto;
     char c_clientID[10], c_reservationID[10], c_dia[5], c_hora[50];
     tipoReserva tipoRes;
 
     ListaReservas *listaReservas = create_lista_reservas();
     Client *root = NULL;
-    while (option) {
+    while (atoi(option) != 9) {
         // Inicializa a 9 por ser um valor não presente na lista de opções
         // Caso o input esteja inválido (letra/cadeia) ele pede um novo
-        option = 9;
+        strcpy(option, "10");
         menu_inicial();
-        scanf("%d", &option);
+        scanf("%s", option);
+        while(atoi(option) == 0){
+            printf("Valor nao numerico ou invalido introduzido!\n");
+            menu_inicial();
+            scanf("%s", option);
+        }
 
         // ----------------------------NOVA-RESERVA----------------------------
-        if (option == 1) {
+        if (atoi(option) == 1) {
             printf("Insira o ID do cliente\n");
 
             scanf("%s", c_clientID);
@@ -89,7 +94,7 @@ int main() {
         }
 
         // --------------------------CANCELAR-RESERVA--------------------------
-        else if (option == 2) {
+        else if (atoi(option) == 2) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
                 printf("Que reserva pretende cancelar?\n");
@@ -104,7 +109,7 @@ int main() {
         }
 
         // ------------------------CANCELAR-PRE-RESERVA------------------------
-        else if (option == 3) {
+        else if (atoi(option) == 3) {
             // PRINT FULL LIST
             if(print_reservas(listaReservas, false)) {
                 // ESCOLHER A RESERVA
@@ -124,12 +129,12 @@ int main() {
         }
 
         // ------------------------------LIST-ALL------------------------------
-        else if (option == 4) {
+        else if (atoi(option) == 4) {
             list_all(listaReservas);
         }
 
         // ------------------------------LIST-CLIENT---------------------------
-        else if (option == 5) {
+        else if (atoi(option) == 5) {
             if (listaReservas->size > 0){
                 printf("\n-------------------------CLIENTES-------------------------\n");
                 inorderTraversal(root);
@@ -150,7 +155,7 @@ int main() {
         }
 
         // --------------------------REALIZAR-RESERVA--------------------------
-        else if (option == 6) {
+        else if (atoi(option) == 6) {
             //PRINT FULL LIST
             if(print_reservas(listaReservas, true)) {
                 printf("Que reserva pretende realizar?\n");
@@ -166,20 +171,24 @@ int main() {
         }
 
         // --------------------------------SAVE--------------------------------
-        else if (option == 7) {
+        else if (atoi(option) == 7) {
             saveLinkedListToFile(listaReservas->start);
             printf("\nDados salvos no ficheiro binario!\n");
         }
 
         // --------------------------------LOAD--------------------------------
-        else if (option == 8) {
+        else if (atoi(option) == 8) {
             listaReservas->start = loadLinkedListFromFile(&listaReservas->size);
             printf("\nDados do ficheiro binario carregados!\n");
         }
 
         // ----------------------------WRONG-INPUT-----------------------------
-        else
-            printf("Valor introduzido invalido!\n");
+        else {
+            if(atoi(option) != 9)
+                printf("Valor introduzido invalido!\n");
+            else
+                printf("QUITTING...");
+        }
 
     }
     return 0;
