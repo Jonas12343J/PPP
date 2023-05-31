@@ -18,7 +18,7 @@ int main() {
     }
 
     char option[10] = "10";
-    //int minuto;
+    int minuto, hora;
     char c_clientID[10], c_reservationID[10], c_dia[5], c_hora[50], c_minuto[50], trash;
     tipoReserva tipoRes;
 
@@ -82,14 +82,16 @@ int main() {
             print_reservas_dia(listaReservas, atoi(c_dia));
 
             strcpy(c_minuto, "0");
+            minuto = 0;
             printf("\nEscolha a hora desejada (hora:minutos)\n");
-            scanf("%[^:]%c%s", c_hora, &trash, c_minuto);
-            while(atoi(c_hora) == 0){
-                printf("Valor nao numerico introduzido!\n");
-                scanf("%[^:]%c%s", c_hora, &trash, c_minuto);
-            }
+            //scanf("%[^:]%c%s", c_hora, &trash, c_minuto);
+            //while(atoi(c_hora) == 0){
+            //    printf("Valor nao numerico introduzido!\n");
+            //    scanf("%[^:]%c%s", c_hora, &trash, c_minuto);
+            //}
+            scanf("%d:%d", &hora, &minuto);
 
-            insert_reserva(listaReservas, atoi(c_clientID), tipoRes, atoi(c_dia), atoi(c_hora), atoi(c_minuto));
+            insert_reserva(listaReservas, atoi(c_clientID), tipoRes, atoi(c_dia), hora, minuto);
         }
 
         // --------------------------CANCELAR-RESERVA--------------------------
