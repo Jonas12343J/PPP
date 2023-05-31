@@ -28,7 +28,6 @@ typedef struct horarioReserva {
     int dia, hora, minutos;
 } horarioReserva;
 
-
 typedef struct Reserva {
     int ID;
     int clientID;
@@ -58,7 +57,6 @@ typedef struct ListaReservas {
     int size;
 } ListaReservas;
 
-
 // ABP DE CLIENTES
 typedef struct Client {
     int clientID;
@@ -74,6 +72,9 @@ NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int 
 Client *createNode(int clientID);
 Client* insert(Client *root, int clientID);
 
+int print_reservas(ListaReservas *lista, bool flag);
+int print_pre_reservas(ListaReservas *lista, int reservationID);
+
 void menu_inicial();
 void print_reservas_dia(ListaReservas *lista, int dia);
 void list_all(ListaReservas *lista);
@@ -85,9 +86,7 @@ void cancela_reserva(ListaReservas *lista, int reservationID);
 void cancela_pre_reserva(ListaPre_Reservas *lista, int reservationID, bool isNotFromCancelR);
 void pre_to_reserva(NoListaReservas *current, NoListaPre_Reservas *curr_pre);
 void realiza_reserva(ListaReservas *lista, int reservationID);
-
 void saveLinkedListToFile(NoListaReservas *node);
-int print_reservas(ListaReservas *lista, bool flag);
+void update_log(char msg[256]);
 
-int print_pre_reservas(ListaReservas *lista, int reservationID);
 #endif //PROJETO_PROJECT_H

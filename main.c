@@ -21,7 +21,7 @@ int main() {
     int option = 9;
 
     int minuto;
-    char c_clientID[10], c_reservationID[10], c_dia[5], c_hora[50], c_minuto[50];
+    char c_clientID[10], c_reservationID[10], c_dia[5], c_hora[50];
     tipoReserva tipoRes;
 
     ListaReservas *listaReservas = create_lista_reservas();
