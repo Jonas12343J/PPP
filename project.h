@@ -70,8 +70,8 @@ ListaPre_Reservas *create_lista_pre_reservas();
 NoListaReservas *loadLinkedListFromFile(int *mainListSize);
 NoListaPre_Reservas *get_pre_reservation_node(ListaPre_Reservas *lista_pre, int time_to_next, int next_start);
 Client *createNode(int clientID);
-Client* insert(Client *root, int clientID);
-Client* loadClientTreeFromFile(FILE* file);
+Client *insert(Client *root, int clientID);
+Client *loadClientTreeFromFile(FILE* file);
 
 int print_reservas(ListaReservas *lista, bool flag);
 int print_pre_reservas(ListaReservas *lista, int reservationID);
