@@ -46,7 +46,6 @@ int main() {
                 scanf("%s", c_clientID);
             }
 
-            root = insert(root, atoi(c_clientID));
             printf("Escolha o tipo de operacao (M/L)\n");
             char tipoR[2];
             scanf("%s", tipoR);
@@ -88,8 +87,10 @@ int main() {
                 printf("Valor nao numerico introduzido!\n");
                 scanf("%[^:]%c%s", c_hora, &trash, c_minuto);
             }
-
             insert_reserva(listaReservas, atoi(c_clientID), tipoRes, atoi(c_dia), atoi(c_hora), atoi(c_minuto));
+
+            // Coloca cliente da reserva na árvore
+            root = insert(root, atoi(c_clientID));
         }
 
         // --------------------------CANCELAR-RESERVA--------------------------

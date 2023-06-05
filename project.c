@@ -231,6 +231,7 @@ int print_pre_reservas(ListaReservas *lista, int reservationID) {
 
             int pre_reservationID;
             scanf("%d", &pre_reservationID);
+
             cancela_pre_reserva(current->listaPreReservas, pre_reservationID, true);
             return 1;
         } else {
@@ -557,7 +558,9 @@ void cancela_reserva(ListaReservas *lista, int reservationID) {
                     NoListaPre_Reservas *no_preR;
                     no_preR = get_pre_reservation_node(no_a_remover->listaPreReservas, time_to_next, next_start);
                     if (no_preR) {// Passa a pré-reserva correta para a lista de reservas
+                        // Copia os dados da pré-reserva para a reserva
                         pre_to_reserva(current, no_preR);
+
                         // Tirar este elemento das pre reservas
                         cancela_pre_reserva(current->listaPreReservas, no_preR->reserva.ID, false);
                         //------------UPDATE-LOG---------------
